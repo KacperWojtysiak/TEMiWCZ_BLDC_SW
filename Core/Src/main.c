@@ -41,7 +41,7 @@ int main(void)
   ADC1_Init();
   TIM1_Init();
 
-  // ADC_StartDMA_ADC1();
+  ADC_StartDMA_ADC1();
   TIM_StartTIM1();
   /* Infinite loop */
   while (1)

@@ -64,8 +64,8 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
     dmaAdc1.Init.PeriphInc = DMA_PINC_DISABLE;
     dmaAdc1.Init.MemInc = DMA_MINC_ENABLE;
     dmaAdc1.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
-    dmaAdc1.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
-    dmaAdc1.Init.Mode = DMA_NORMAL;
+    dmaAdc1.Init.MemDataAlignment = DMA_PDATAALIGN_WORD;
+    dmaAdc1.Init.Mode = DMA_CIRCULAR;
     dmaAdc1.Init.Priority = DMA_PRIORITY_LOW;
     if (HAL_DMA_Init(&dmaAdc1) != HAL_OK)
     {
