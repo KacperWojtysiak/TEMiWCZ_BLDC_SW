@@ -35,7 +35,7 @@ extern "C" {
 #define T_SWCLK_Pin           GPIO_PIN_14
 #define T_SWCLK_GPIO_Port     GPIOA
 #define T_SWO_Pin             GPIO_PIN_3
-#define T_SWO_GPIO_Port       GPIOB
+#define BRK_TIM1_Pin          GPIO_PIN_10
 
 /* --------------------------------- PUBLIC FUNCTIONS ---------------------------------*/
 void GPIO_Init(void);
