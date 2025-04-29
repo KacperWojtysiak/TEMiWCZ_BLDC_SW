@@ -27,6 +27,7 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32g4xx_hal.h"
+#include <stdio.h>
 #include "GPIO.h"
 #include "ADC.h"
 #include "DMA.h"
@@ -37,6 +38,15 @@ extern "C" {
 void Error_Handler(void);
 
 /* Private defines -----------------------------------------------------------*/
+
+static inline void ITM_SendValue (int port, uint32_t value)
+{
+    if ((ITM->TCR & ITM_TCR_ITMENA_Msk) && (ITM->TER & (1UL << port)))
+    {
+        while (ITM->PORT[port].u32 == 0);
+        ITM->PORT[port].u32 = value;
+    }
+}
 
 #ifdef __cplusplus
 }

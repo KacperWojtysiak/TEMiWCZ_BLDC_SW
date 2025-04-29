@@ -25,6 +25,11 @@ void SystemClock_Config(void);
 static void MX_LPUART1_UART_Init(void);
 /* Private user code ---------------------------------------------------------*/
 
+int __io_putchar(int chr){
+	ITM_SendChar(chr);
+	return 1;
+}
+
 int main(void)
 {
   /* MCU Configuration--------------------------------------------------------*/
@@ -39,6 +44,7 @@ int main(void)
   MX_LPUART1_UART_Init();
   USB_PCD_Init();
   ADC1_Init();
+  MX_ADC2_Init();
   TIM1_Init();
 
   ADC_StartDMA_ADC1();

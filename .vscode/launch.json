@@ -32,6 +32,66 @@
             //"serverArgs": ["--extload", "path/to/ext/loader.stldr"],
         },
         {
+            "cwd": "${workspaceRoot}",
+            "executable": "${command:cmake.launchTargetPath}",
+            "name": "Debug with OpenOCD",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            "serverpath": "C:/ST/STM32CubeIDE_1.18.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.openocd.win32_2.4.100.202501161620/tools/bin/openocd.exe",
+            "configFiles": [
+                "${workspaceFolder}/Debug.cfg"
+            ],
+            "serverArgs": [
+                "-s","C:/ST/STM32CubeIDE_1.18.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.debug.openocd_2.3.100.202501240831/resources/openocd/st_scripts" 
+            ],
+            "runToEntryPoint": "main",
+            "showDevDebugOutput": "none",
+            "svdFile": "${config:STM32VSCodeExtension.cubeCLT.path}/STMicroelectronics_CMSIS_SVD/STM32G431.svd",
+            "interface": "swd",
+            "device": "STM32G431RBTx", //MCU used
+            "swoConfig": {
+                "enabled": true,
+                "cpuFrequency": 170000000,
+                "swoFrequency":  2000000,
+                "source": "probe",
+                "decoders": [
+                    { 
+                        "type": "console",
+                        "label": "ITM",
+                        "showOnStartup": true,
+                        "port": 0,
+                        "encoding": "ascii"
+                    },
+                    {
+                        "graphId": "1",
+                        "type": "graph",
+                        "port": 3,
+                        "label": "Graph 1",
+                        "showOnStartup": true
+                    }
+                ]
+                
+            },
+            "graphConfig": [
+                {
+                "label": "Graph 1",
+                "timespan": 5,
+                "type": "realtime",
+                "annotate": false,
+                "maximum": 2000,
+                "minimum": -2000,
+                "plots": [
+                    {
+                    "graphId": "1",
+                    "label": "BUFFER",
+                    "color": "#53753c" ,
+                    }
+                ]
+                }
+      ]
+        },
+        {
             "name": "Attach to Microcontroller - ST-Link",
             "cwd": "${workspaceFolder}",
             "type": "cortex-debug",
