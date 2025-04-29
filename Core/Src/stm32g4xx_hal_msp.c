@@ -167,9 +167,8 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
    {
      /* Peripheral clock enable */
      __HAL_RCC_TIM1_CLK_ENABLE();
- 
      __HAL_RCC_GPIOB_CLK_ENABLE();
-     __HAL_RCC_GPIOA_CLK_ENABLE();
+    //  __HAL_RCC_GPIOA_CLK_ENABLE();
      /**TIM1 GPIO Configuration
      PB10     ------> TIM1_BKIN
      PA9     ------> TIM1_CH2
@@ -181,13 +180,6 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
      GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
      GPIO_InitStruct.Alternate = GPIO_AF12_TIM1_COMP1;
      HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
- 
-     GPIO_InitStruct.Pin = GPIO_PIN_9 | GPIO_PIN_10;
-     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-     GPIO_InitStruct.Pull = GPIO_NOPULL;
-     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-     GPIO_InitStruct.Alternate = GPIO_AF6_TIM1;
-     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
  
      /* TIM1 interrupt Init */
      HAL_NVIC_SetPriority(TIM1_BRK_TIM15_IRQn, 0, 0);
@@ -213,16 +205,23 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
      PB15     ------> TIM1_CH3N
      PA8     ------> TIM1_CH1
      */
-     GPIO_InitStruct.Pin = GPIO_PIN_13|GPIO_PIN_14;
+     GPIO_InitStruct.Pin = GPIO_PIN_13|GPIO_PIN_14|GPIO_PIN_15;
      GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-     GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+     GPIO_InitStruct.Pull = GPIO_NOPULL;
      GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
      GPIO_InitStruct.Alternate = GPIO_AF6_TIM1;
      HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
- 
-     GPIO_InitStruct.Pin = GPIO_PIN_8;
+
+     GPIO_InitStruct.Pin = GPIO_PIN_15;
      GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-     GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+     GPIO_InitStruct.Pull = GPIO_NOPULL;
+     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+     GPIO_InitStruct.Alternate = GPIO_AF4_TIM1;
+     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+     GPIO_InitStruct.Pin = GPIO_PIN_8|GPIO_PIN_9|GPIO_PIN_10;
+     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+     GPIO_InitStruct.Pull = GPIO_NOPULL;
      GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
      GPIO_InitStruct.Alternate = GPIO_AF6_TIM1;
      HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);

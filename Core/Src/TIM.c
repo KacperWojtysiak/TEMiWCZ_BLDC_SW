@@ -11,7 +11,7 @@
 
 /* --------------------------------- PRIVATE VARIABLES ---------------------------------*/
 /* PWM generation and current reading */
-#define PWM_FREQUENCY                       10000
+#define PWM_FREQUENCY                       1000
 #define PWM_FREQ_SCALING                    1
 // #define LOW_SIDE_SIGNALS_ENABLING           LS_PWM_TIMER
 #define DEADTIME_NS                         565 /*!< Dead-time to be inserted by FW, only if low side signals are enabled */
@@ -23,7 +23,7 @@
 #define PWM_PULSE                                (PWM_DUTY_CYCLE * PWM_PERIOD_CYCLES / 100)
 
 #define REGULATION_EXECUTION_RATE 1 /*!< FOC execution rate in number of PWM cycles */
-#define REP_COUNTER               (uint16_t)((REGULATION_EXECUTION_RATE * 2u) - 1u)
+#define REP_COUNTER               1 //(uint16_t)((REGULATION_EXECUTION_RATE * 2u) - 1u)
 
 /* DEAD TIME CALCULATION */
 #define DEAD_TIME_ADV_TIM_CLK_MHz           (ADV_TIM_CLK_MHz * TIM_CLOCK_DIVIDER)
@@ -64,7 +64,7 @@ void TIM1_Init(void){
   htim1.Init.Period = (PWM_PERIOD_CYCLES - 1);
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim1.Init.RepetitionCounter = REP_COUNTER;
-  htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+  htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE; //ENABLE
   if (HAL_TIM_Base_Init(&htim1) != HAL_OK)
   {
     Error_Handler();
@@ -80,14 +80,12 @@ void TIM1_Init(void){
     Error_Handler();
   }
   // Disable timer synchronization and trigger outputs (standalone operation)
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterOutputTrigger2 = TIM_TRGO2_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim1, &sMasterConfig) != HAL_OK)
   {
-    sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-    sMasterConfig.MasterOutputTrigger2 = TIM_TRGO2_RESET;
-    sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-    if (HAL_TIMEx_MasterConfigSynchronization(&htim1, &sMasterConfig) != HAL_OK)
-    {
-      Error_Handler();
-    }
+    Error_Handler();
   }
   // Enable break input on BKIN pin (DRIVER OVERCURRENT PROTECTION)
   sBreakInputConfig.Source = TIM_BREAKINPUTSOURCE_BKIN;
@@ -109,31 +107,44 @@ void TIM1_Init(void){
   {
     Error_Handler();
   }
-  // Configure break / dead-time feature
+  if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_2) != HAL_OK)
   {
-    sBreakDeadTimeConfig.OffStateRunMode = TIM_OSSR_ENABLE;
-    sBreakDeadTimeConfig.OffStateIDLEMode = TIM_OSSI_ENABLE;
-    sBreakDeadTimeConfig.LockLevel = TIM_LOCKLEVEL_OFF;
-    sBreakDeadTimeConfig.DeadTime = ((DEAD_TIME_COUNTS) / 2);
-    sBreakDeadTimeConfig.BreakState = TIM_BREAK_ENABLE;
-    sBreakDeadTimeConfig.BreakPolarity = TIM_BREAKPOLARITY_HIGH;
-    sBreakDeadTimeConfig.BreakFilter = 3;
-    sBreakDeadTimeConfig.BreakAFMode = TIM_BREAK_AFMODE_INPUT;
-    sBreakDeadTimeConfig.Break2State = TIM_BREAK2_DISABLE;
-    sBreakDeadTimeConfig.Break2Polarity = TIM_BREAK2POLARITY_HIGH;
-    sBreakDeadTimeConfig.Break2Filter = 0;
-    sBreakDeadTimeConfig.Break2AFMode = TIM_BREAK_AFMODE_INPUT;
-    sBreakDeadTimeConfig.AutomaticOutput = TIM_AUTOMATICOUTPUT_DISABLE;
-    if (HAL_TIMEx_ConfigBreakDeadTime(&htim1, &sBreakDeadTimeConfig) != HAL_OK)
-    {
-      Error_Handler();
-    }
+    Error_Handler();
+  }
+  if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  // Configure break / dead-time feature
+  sBreakDeadTimeConfig.OffStateRunMode = TIM_OSSR_ENABLE;
+  sBreakDeadTimeConfig.OffStateIDLEMode = TIM_OSSI_ENABLE;
+  sBreakDeadTimeConfig.LockLevel = TIM_LOCKLEVEL_OFF;
+  sBreakDeadTimeConfig.DeadTime = DEADTIME_NS;
+  sBreakDeadTimeConfig.BreakState = TIM_BREAK_ENABLE;
+  sBreakDeadTimeConfig.BreakPolarity = TIM_BREAKPOLARITY_HIGH;
+  sBreakDeadTimeConfig.BreakFilter = 3;
+  sBreakDeadTimeConfig.BreakAFMode = TIM_BREAK_AFMODE_INPUT;
+  sBreakDeadTimeConfig.Break2State = TIM_BREAK2_DISABLE;
+  sBreakDeadTimeConfig.Break2Polarity = TIM_BREAK2POLARITY_HIGH;
+  sBreakDeadTimeConfig.Break2Filter = 0;
+  sBreakDeadTimeConfig.Break2AFMode = TIM_BREAK_AFMODE_INPUT;
+  sBreakDeadTimeConfig.AutomaticOutput = TIM_AUTOMATICOUTPUT_DISABLE;
+  if (HAL_TIMEx_ConfigBreakDeadTime(&htim1, &sBreakDeadTimeConfig) != HAL_OK)
+  {
+    Error_Handler();
   }
   HAL_TIM_MspPostInit(&htim1);
 }
 
 void TIM_StartTIM1(){
+  HAL_TIM_PWM_Start_IT(&htim1, TIM_CHANNEL_1);
   HAL_TIMEx_PWMN_Start_IT(&htim1, TIM_CHANNEL_1);
+
+  HAL_TIM_PWM_Start_IT(&htim1, TIM_CHANNEL_2);
+  HAL_TIMEx_PWMN_Start_IT(&htim1, TIM_CHANNEL_2);
+
+  HAL_TIM_PWM_Start_IT(&htim1, TIM_CHANNEL_3);
+  HAL_TIMEx_PWMN_Start_IT(&htim1, TIM_CHANNEL_3);
 }
 
 void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim){
