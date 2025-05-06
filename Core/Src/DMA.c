@@ -23,7 +23,7 @@ void DMA_Init(void)
 
   /* DMA interrupt init */
   /* DMA1_Channel1_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, ADC_DMA_PRIORITY, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
 }
 

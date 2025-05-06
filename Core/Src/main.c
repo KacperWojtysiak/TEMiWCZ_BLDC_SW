@@ -47,8 +47,8 @@ int main(void)
   MX_ADC2_Init();
   TIM1_Init();
 
+  TIM_StartTIM1(); // IMPORTANT
   ADC_StartDMA_ADC1();
-  TIM_StartTIM1();
   /* Infinite loop */
   while (1)
   {

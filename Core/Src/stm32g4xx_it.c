@@ -123,8 +123,22 @@ void SysTick_Handler(void)
 void DMA1_Channel1_IRQHandler(void)
 {
   HAL_DMA_IRQHandler(ADC_GetDMA1Ref());
+  uint16_t b;
+  // uint32_t sum = 0;
+  // uint32_t val = 0;
+  for (uint8_t i = 0; i < ADC_BUFFER_SIZE; i++){
+    // b = ADC_GetBufferADC1Ref()[i];
+    // sum += b;
+    b =  ADC_ValueToVoltage(ADC_GetBufferADC1Ref()[i]);
+    printf("DATA: %d\n", b);
+    ITM_SendValue(3, b);
+    HAL_Delay(1);
+  }
+  ADC_StartDMA_ADC1();
+  // val = sum/ADC_BUFFER_SIZE
 }
 
+// TODO Delete, use DMA interrupt instead
 /**
   * @brief This function handles ADC1 and ADC2 global interrupt.
   */

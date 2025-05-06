@@ -21,6 +21,7 @@
 #include "main.h"
 
 extern DMA_HandleTypeDef dmaAdc1;
+static uint32_t HAL_RCC_ADC12_CLK_ENABLED=0;
 
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 
@@ -41,6 +42,7 @@ void HAL_MspInit(void)
 
 void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
 {
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
   RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
   if(hadc->Instance==ADC1)
   {
@@ -54,7 +56,21 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
     }
 
     /* Peripheral clock enable */
-    __HAL_RCC_ADC12_CLK_ENABLE();
+    // __HAL_RCC_ADC12_CLK_ENABLE();
+    HAL_RCC_ADC12_CLK_ENABLED++;
+    if(HAL_RCC_ADC12_CLK_ENABLED==1){
+      __HAL_RCC_ADC12_CLK_ENABLE();
+    }
+
+    __HAL_RCC_GPIOC_CLK_ENABLE();
+    /**ADC1 GPIO Configuration
+    PC1     ------> ADC1_IN7
+    PC2     ------> ADC1_IN8
+    */
+    GPIO_InitStruct.Pin = SENS_I_A_Pin|SENS_I_B_Pin;
+    GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
     /* ADC1 DMA Init */
     /* ADC1 Init */
@@ -75,8 +91,36 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
     __HAL_LINKDMA(hadc,DMA_Handle,dmaAdc1);
 
     /* ADC1 interrupt Init */
-    HAL_NVIC_SetPriority(ADC1_2_IRQn, 0, 0);
+    // TODO Delete, DMA irq instead
+    HAL_NVIC_SetPriority(ADC1_2_IRQn, ADC_DMA_PRIORITY, 0);
     HAL_NVIC_EnableIRQ(ADC1_2_IRQn);
+  }
+  else if(hadc->Instance==ADC2)
+  {
+  /** Initializes the peripherals clocks
+  */
+    PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_ADC12;
+    PeriphClkInit.Adc12ClockSelection = RCC_ADC12CLKSOURCE_SYSCLK;
+    if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
+    {
+      Error_Handler();
+    }
+
+    /* Peripheral clock enable */
+    HAL_RCC_ADC12_CLK_ENABLED++;
+    if(HAL_RCC_ADC12_CLK_ENABLED==1){
+      __HAL_RCC_ADC12_CLK_ENABLE();
+    }
+
+    __HAL_RCC_GPIOC_CLK_ENABLE();
+    /**ADC2 GPIO Configuration
+    PC2     ------> ADC2_IN8
+    PC3     ------> ADC2_IN9
+    */
+    GPIO_InitStruct.Pin = SENS_I_B_Pin|SENS_I_C_Pin;
+    GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
   }
 }
 
@@ -85,12 +129,35 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* hadc)
   if(hadc->Instance==ADC1)
   {
     /* Peripheral clock disable */
-    __HAL_RCC_ADC12_CLK_DISABLE();
+    // __HAL_RCC_ADC12_CLK_DISABLE();
+    HAL_RCC_ADC12_CLK_ENABLED--;
+    if(HAL_RCC_ADC12_CLK_ENABLED==0){
+      __HAL_RCC_ADC12_CLK_DISABLE();
+    }
 
+    /**ADC1 GPIO Configuration
+    PC1     ------> ADC1_IN7
+    PC2     ------> ADC1_IN8
+    */
+    HAL_GPIO_DeInit(GPIOC, SENS_I_A_Pin|SENS_I_B_Pin);
     /* ADC1 DMA DeInit */
     HAL_DMA_DeInit(hadc->DMA_Handle);
     /* ADC1 interrupt DeInit */
-    HAL_NVIC_DisableIRQ(ADC1_2_IRQn);
+    HAL_NVIC_DisableIRQ(ADC1_2_IRQn); // TODO Disable irq, DMA instead
+  }
+  else if(hadc->Instance==ADC2)
+  {
+    /* Peripheral clock disable */
+    HAL_RCC_ADC12_CLK_ENABLED--;
+    if(HAL_RCC_ADC12_CLK_ENABLED==0){
+      __HAL_RCC_ADC12_CLK_DISABLE();
+    }
+    
+    /**ADC2 GPIO Configuration
+    PC2     ------> ADC2_IN8
+    PC3     ------> ADC2_IN9
+    */
+    HAL_GPIO_DeInit(GPIOC, SENS_I_B_Pin|SENS_I_C_Pin);
   }
 }
 
