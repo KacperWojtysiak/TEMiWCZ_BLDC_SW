@@ -23,20 +23,20 @@ void ADC1_Init(void){
 
    /** Common config */
    adc1.Instance = ADC1;
-   adc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
+   adc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4; //ADC_CLOCK_ASYNC_DIV1
    adc1.Init.Resolution = ADC_RESOLUTION_12B;
    adc1.Init.DataAlign = ADC_DATAALIGN_RIGHT; //ADC_DATAALIGN_LEFT
    adc1.Init.GainCompensation = 0;
-   adc1.Init.ScanConvMode = ADC_SCAN_DISABLE; // Enable
-   adc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV; //ADC_EOC_SEQ_CONV
+   adc1.Init.ScanConvMode = ADC_SCAN_DISABLE; // ADC_SCAN_ENABLE
+   adc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV; // x ADC_EOC_SEQ_CONV
    adc1.Init.LowPowerAutoWait = DISABLE;
    adc1.Init.ContinuousConvMode = DISABLE;
    adc1.Init.NbrOfConversion = 1; // 3 TODO
    adc1.Init.DiscontinuousConvMode = DISABLE;
-   adc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
-   adc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
-   adc1.Init.DMAContinuousRequests = ENABLE;
-   adc1.Init.Overrun = ADC_OVR_DATA_OVERWRITTEN;
+   adc1.Init.ExternalTrigConv = ADC_SOFTWARE_START; //ADC_EXTERNALTRIG_T3_TRGO // Wyzwolone timerem wewnętrznym nie do pwm!
+   adc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE; //ADC_EXTERNALTRIGCONVEDGE_FALLING
+   adc1.Init.DMAContinuousRequests = ENABLE; //DISABLE
+   adc1.Init.Overrun = ADC_OVR_DATA_OVERWRITTEN; //ADC_OVR_DATA_PRESERVED // Zachowuje dane!
    adc1.Init.OversamplingMode = DISABLE;
    if (HAL_ADC_Init(&adc1) != HAL_OK)
    {
@@ -53,7 +53,7 @@ void ADC1_Init(void){
    /** Configure Regular Channel */
    sConfig.Channel = ADC_CHANNEL_7;
    sConfig.Rank = ADC_REGULAR_RANK_1;
-   sConfig.SamplingTime = ADC_SAMPLETIME_2CYCLES_5;
+   sConfig.SamplingTime = ADC_SAMPLETIME_2CYCLES_5; //ADC_SAMPLETIME_6CYCLES_5
    sConfig.SingleDiff = ADC_SINGLE_ENDED;
    sConfig.OffsetNumber = ADC_OFFSET_NONE;
    sConfig.Offset = 0;

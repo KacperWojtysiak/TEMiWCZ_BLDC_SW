@@ -113,29 +113,25 @@ void SysTick_Handler(void)
   */
  void EXTI15_10_IRQHandler(void)
  {
-   HAL_GPIO_EXTI_IRQHandler(B1_Pin);
+   HAL_GPIO_EXTI_IRQHandler(BTN_Pin_2);
+  //  HAL_GPIO_EXTI_IRQHandler(B1_Pin);
  }
 
- 
+ /**
+  * @brief This function handles EXTI line[9:5] interrupts.
+  */
+void EXTI9_5_IRQHandler(void)
+{
+  HAL_GPIO_EXTI_IRQHandler(BTN_Pin_1);
+}
+
 /**
   * @brief This function handles DMA1 channel1 global interrupt.
   */
 void DMA1_Channel1_IRQHandler(void)
 {
   HAL_DMA_IRQHandler(ADC_GetDMA1Ref());
-  uint16_t b;
-  // uint32_t sum = 0;
-  // uint32_t val = 0;
-  for (uint8_t i = 0; i < ADC_BUFFER_SIZE; i++){
-    // b = ADC_GetBufferADC1Ref()[i];
-    // sum += b;
-    b =  ADC_ValueToVoltage(ADC_GetBufferADC1Ref()[i]);
-    printf("DATA: %d\n", b);
-    ITM_SendValue(3, b);
-    HAL_Delay(1);
-  }
-  ADC_StartDMA_ADC1();
-  // val = sum/ADC_BUFFER_SIZE
+  // ADC_StartDMA_ADC1();
 }
 
 // TODO Delete, use DMA interrupt instead
@@ -162,3 +158,11 @@ void ADC1_2_IRQHandler(void)
  {
    HAL_TIM_IRQHandler(TIM_GetTim1Ref());
  }
+
+ /**
+  * @brief This function handles SPI1 global interrupt.
+  */
+void SPI1_IRQHandler(void)
+{
+  // HAL_SPI_IRQHandler(&hspi1);
+}

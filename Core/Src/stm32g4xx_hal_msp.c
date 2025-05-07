@@ -33,6 +33,7 @@ void HAL_MspInit(void)
   __HAL_RCC_SYSCFG_CLK_ENABLE();
   __HAL_RCC_PWR_CLK_ENABLE();
 
+  // HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_3);
   /* System interrupt init*/
 
   /** Disable the internal Pull-Up in Dead Battery pins of UCPD peripheral
@@ -80,7 +81,7 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
     dmaAdc1.Init.PeriphInc = DMA_PINC_DISABLE;
     dmaAdc1.Init.MemInc = DMA_MINC_ENABLE;
     dmaAdc1.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
-    dmaAdc1.Init.MemDataAlignment = DMA_PDATAALIGN_WORD;
+    dmaAdc1.Init.MemDataAlignment = DMA_PDATAALIGN_WORD; //DMA_MDATAALIGN_HALFWORD
     dmaAdc1.Init.Mode = DMA_CIRCULAR;
     dmaAdc1.Init.Priority = DMA_PRIORITY_LOW;
     if (HAL_DMA_Init(&dmaAdc1) != HAL_OK)

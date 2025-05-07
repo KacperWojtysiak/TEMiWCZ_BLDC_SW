@@ -73,23 +73,23 @@
                 ]
                 
             },
-            "graphConfig": [
-                {
-                "label": "Graph 1",
-                "timespan": 5,
-                "type": "realtime",
-                "annotate": false,
-                "maximum": 5000,
-                "minimum": -2000,
-                "plots": [
-                    {
-                    "graphId": "1",
-                    "label": "BUFFER",
-                    "color": "#53753c" ,
-                    }
-                ]
-                }
-      ]
+    //         "graphConfig": [
+    //             {
+    //             "label": "Graph 1",
+    //             "timespan": 5,
+    //             "type": "realtime",
+    //             "annotate": false,
+    //             "maximum": 5000,
+    //             "minimum": -2000,
+    //             "plots": [
+    //                 {
+    //                 "graphId": "1",
+    //                 "label": "BUFFER",
+    //                 "color": "#53753c" ,
+    //                 }
+    //             ]
+    //             }
+    //   ]
         },
         {
             "name": "Attach to Microcontroller - ST-Link",
