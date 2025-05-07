@@ -52,7 +52,11 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
 
 # Add include paths
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
+    ${CMAKE_SOURCE_DIR}"/Drivers/STM32G4xx_HAL_Driver/Inc"
+    ${CMAKE_SOURCE_DIR}/Drivers/STM32G4xx_HAL_Driver/Inc/Legacy
+
     # Add user defined include paths
+    
 )
 
 # Add project symbols (macros)
