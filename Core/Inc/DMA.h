@@ -22,9 +22,6 @@ extern "C" {
 /* --------------------------------- PUBLIC VARIABLES ---------------------------------*/
 
 /* --------------------------------- PUBLIC FUNCTIONS ---------------------------------*/
-void DMA_Init(void);
-
-DMA_HandleTypeDef* ADC_GetDMA1Ref();
 
 #ifdef __cplusplus
 }

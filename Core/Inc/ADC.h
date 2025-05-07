@@ -28,16 +28,13 @@ extern "C" {
 
 #define ADC_BUFFER_SIZE 1U
 #define ADC_DMA_PRIORITY 1
+
+extern ADC_HandleTypeDef hadc1;
+extern uint16_t buffer[ADC_BUFFER_SIZE];
 /* --------------------------------- PUBLIC FUNCTIONS ---------------------------------*/
-void ADC1_Init(void);
-
 void ADC_StartDMA_ADC1();
-void MX_ADC2_Init(void);
 
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* adc);
-
-ADC_HandleTypeDef* ADC_GetADC1Ref();
-uint16_t* ADC_GetBufferADC1Ref();
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* adc); // TODO delete
 
 static inline uint16_t ADC_ValueToVoltage(uint16_t adcValue)
 {

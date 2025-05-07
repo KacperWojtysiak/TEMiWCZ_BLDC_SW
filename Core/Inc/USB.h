@@ -19,6 +19,7 @@ extern "C" {
 #include "main.h"
 
 /* --------------------------------- PUBLIC VARIABLES ---------------------------------*/
+extern PCD_HandleTypeDef hpcd_USB_FS;
 
 /* --------------------------------- PUBLIC FUNCTIONS ---------------------------------*/
 void USB_PCD_Init(void);
