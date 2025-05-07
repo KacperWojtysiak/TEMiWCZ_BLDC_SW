@@ -48,6 +48,11 @@ target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
 # Add sources to executable
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user sources here
+    ${CMAKE_SOURCE_DIR}/Core/Src/GPIO.c
+    ${CMAKE_SOURCE_DIR}/Core/Src/ADC.c
+    ${CMAKE_SOURCE_DIR}/Core/Src/DMA.c
+    ${CMAKE_SOURCE_DIR}/Core/Src/USB.c
+    ${CMAKE_SOURCE_DIR}/Core/Src/TIM.c
 )
 
 # Add include paths
