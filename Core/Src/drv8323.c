@@ -29,7 +29,7 @@ uint16_t DRV8323regGateDrvLS =
   15;       //IDRIVEN_LS			
 
 uint16_t DRV8323regOcpCtrl =
-  0 << 10 | //TRETRY
+  1 << 10 | //TRETRY
   1 << 8  | //DEAD_TIME
   1 << 6  | //OCP_MODE
   2 << 4  | //OCP_DEG
@@ -53,6 +53,7 @@ uint16_t DRV8323_readSpi(uint8_t regAdr)
 	uint16_t recbuff = 0xbeef;
 	
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_4, GPIO_PIN_RESET);
+  HAL_Delay(1);
   HAL_SPI_TransmitReceive(&hspi1, (uint8_t*)(&controlword), (uint8_t*)(&recbuff), 1, 1000);
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_4, GPIO_PIN_SET);
   HAL_Delay(10);
@@ -62,9 +63,10 @@ uint16_t DRV8323_readSpi(uint8_t regAdr)
 void DRV8323_writeSpi(uint8_t regAdr, uint16_t regVal)
 {
 	uint16_t controlword = (regAdr & 0x7) << 11 | (regVal & 0x7ff); //MSbit =0 for write, address is 3 bits (MSbit is always 0), data is 11 bits
-	
+	uint16_t recbuff = 0xbeef;
 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_4, GPIO_PIN_RESET);
-	HAL_SPI_Transmit(&hspi1, (uint8_t*)(&controlword), 1, 1000);
+  HAL_Delay(1);
+  HAL_SPI_TransmitReceive(&hspi1, (uint8_t*)(&controlword), (uint8_t*)(&recbuff), 1, 1000);
 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_4, GPIO_PIN_SET);
   HAL_Delay(10);
 	return;
