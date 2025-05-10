@@ -53,11 +53,13 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     ${CMAKE_SOURCE_DIR}/Core/Src/DMA.c
     ${CMAKE_SOURCE_DIR}/Core/Src/USB.c
     ${CMAKE_SOURCE_DIR}/Core/Src/TIM.c
+    ${CMAKE_SOURCE_DIR}/Core/Src/drv8323.c
 )
 
 # Add include paths
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined include paths
+    ${CMAKE_SOURCE_DIR}/Core/Inc/drv8323.h
 )
 
 # Add project symbols (macros)
