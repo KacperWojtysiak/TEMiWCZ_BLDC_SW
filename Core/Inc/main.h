@@ -80,6 +80,8 @@ void Error_Handler(void);
 #define LPUART1_RX_GPIO_Port GPIOA
 #define ENABLE_Pin GPIO_PIN_4
 #define ENABLE_GPIO_Port GPIOA
+#define NSCS_Pin GPIO_PIN_4
+#define NSCS_GPIO_Port GPIOC
 #define BTN_2_Pin GPIO_PIN_12
 #define BTN_2_GPIO_Port GPIOB
 #define BTN_2_EXTI_IRQn EXTI15_10_IRQn
