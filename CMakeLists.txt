@@ -40,11 +40,22 @@ add_executable(${CMAKE_PROJECT_NAME})
 # Add STM32CubeMX generated sources
 add_subdirectory(cmake/stm32cubemx)
 
+# Drivers Midllewares
+set(MotorControl_Src
+    ${CMAKE_SOURCE_DIR}/MCSDK/MCLib/Any/Src/digital_output.c
+    # ${CMAKE_SOURCE_DIR}/MCSDK/MCLib/Any/Src/ntc_temperature_sensor.c
+    # ${CMAKE_SOURCE_DIR}/MCSDK/MCLib/Any/Src/datalog.c
+    # ${CMAKE_SOURCE_DIR}/MCSDK/MCLib/Any/Src/fixpmath.c
+    # ${CMAKE_SOURCE_DIR}/MCSDK/MCLib/Any/Src/mathlib.c
+    # ${CMAKE_SOURCE_DIR}/MCSDK/MCLib/Any/Src/pidreg_speed.c
+    # ${CMAKE_SOURCE_DIR}/MCSDK/MCLib/Any/Src/pidregdqx_current.c
+    # ${CMAKE_SOURCE_DIR}/MCSDK/MCLib/Any/Src/profiler_impedest.c
+)
+
 # Link directories setup
 target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined library search paths
 )
-
 # Add sources to executable
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user sources here
@@ -56,11 +67,21 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     ${CMAKE_SOURCE_DIR}/Core/Src/drv8323.c
 )
 
+# Link directories setup
+set(MX_LINK_DIRS
+    ${CMAKE_SOURCE_DIR}/MCSDK/libHSO
+)
+
 # Add include paths
-target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
+target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC
     # Add user defined include paths
     ${CMAKE_SOURCE_DIR}/Core/Inc/drv8323.h
 )
+
+# Create MotorControl static library
+add_library(MotorControl OBJECT)
+target_sources(MotorControl PRIVATE ${MotorControl_Src})
+target_link_libraries(MotorControl PUBLIC stm32cubemx)
 
 # Add project symbols (macros)
 target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE
@@ -70,6 +91,16 @@ target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE
 # Add linked libraries
 target_link_libraries(${CMAKE_PROJECT_NAME}
     stm32cubemx
-
+	:libHSO.a 
+	:libImpedCorr.a 
+	:libPolPulse.a 
+	:libRsEst.a
+    MotorControl
     # Add user defined libraries
 )
+
+target_include_directories(MotorControl PUBLIC
+    ${CMAKE_SOURCE_DIR}/MCSDK/MCLib/Any/Inc
+)
+# Link directories setup
+target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE ${MX_LINK_DIRS})
