@@ -143,6 +143,9 @@ int main(void)
     ctrl = DRV8323_readSpi(ADR_DRV_CTRL);
     hs = DRV8323_readSpi(ADR_GATE_DRV_HS);
     ls = DRV8323_readSpi(ADR_GATE_DRV_LS);
+
+
+    DRV8323_writeSpi(ADR_OCP_CTRL, 1881); // write to DRV_CTRL register to disable the driver
     ocp = DRV8323_readSpi(ADR_OCP_CTRL);
     csa = DRV8323_readSpi(ADR_CSA_CTRL);
 
@@ -397,8 +400,8 @@ static void MX_SPI1_Init(void)
   hspi1.Init.Mode = SPI_MODE_MASTER;
   hspi1.Init.Direction = SPI_DIRECTION_2LINES;
   hspi1.Init.DataSize = SPI_DATASIZE_16BIT;
-  hspi1.Init.CLKPolarity = SPI_POLARITY_HIGH;
-  hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
+  hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
+  hspi1.Init.CLKPhase = SPI_PHASE_2EDGE;
   hspi1.Init.NSS = SPI_NSS_SOFT;
   hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_128;
   hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
