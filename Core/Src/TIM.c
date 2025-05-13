@@ -16,13 +16,13 @@
 /* --------------------------------- PUBLIC FUNCTIONS ---------------------------------*/
 void TIM_StartTIM1(){
   HAL_TIM_PWM_Start_IT(&htim1, TIM_CHANNEL_1);
-  // HAL_TIMEx_PWMN_Start_IT(&htim1, TIM_CHANNEL_1);
+  HAL_TIMEx_PWMN_Start_IT(&htim1, TIM_CHANNEL_1);
 
   HAL_TIM_PWM_Start_IT(&htim1, TIM_CHANNEL_2);
-  // HAL_TIMEx_PWMN_Start_IT(&htim1, TIM_CHANNEL_2);
+  HAL_TIMEx_PWMN_Start_IT(&htim1, TIM_CHANNEL_2);
 
   HAL_TIM_PWM_Start_IT(&htim1, TIM_CHANNEL_3);
-  // HAL_TIMEx_PWMN_Start_IT(&htim1, TIM_CHANNEL_3);
+  HAL_TIMEx_PWMN_Start_IT(&htim1, TIM_CHANNEL_3);
 }
 
 void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim){

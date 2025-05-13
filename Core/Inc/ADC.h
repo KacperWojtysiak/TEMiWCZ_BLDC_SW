@@ -26,15 +26,17 @@ extern "C" {
 #define SENS_I_C_Pin GPIO_PIN_3
 #define SENS_I_C_GPIO_Port GPIOC
 
-#define ADC_BUFFER_SIZE 1U
-#define ADC_DMA_PRIORITY 1
+#define ADC_CURR_BUFFER_SIZE 3
+#define ADC_VOLT_BUFFER_SIZE 3
 
 extern ADC_HandleTypeDef hadc1;
-extern uint16_t buffer[ADC_BUFFER_SIZE];
+extern ADC_HandleTypeDef hadc2;
+extern uint16_t currentBuffer[ADC_CURR_BUFFER_SIZE];
+extern uint16_t voltageBuffer[ADC_VOLT_BUFFER_SIZE];
 /* --------------------------------- PUBLIC FUNCTIONS ---------------------------------*/
-void ADC_StartDMA_ADC1();
+void ADC_StartDMA_ADC();
 
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* adc); // TODO delete
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* adc);
 
 static inline uint16_t ADC_ValueToVoltage(uint16_t adcValue)
 {

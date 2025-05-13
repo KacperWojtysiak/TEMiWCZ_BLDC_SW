@@ -49,6 +49,10 @@ extern "C" {
 #define DEAD_TIME_COUNTS 510
 #endif
 
+#define OVS_COUNT                            (4) /*!< @brief  Oversampling level. default value is 4 */
+#define M1_AUX_TIM_PERIOD_CYCLES            (uint16_t)((((uint32_t)ADV_TIM_CLK_MHz * (uint32_t)1000000u\
+                                            / ((uint32_t)(PWM_FREQUENCY)*OVS_COUNT)))-1)
+
 extern TIM_HandleTypeDef htim1;
 
 /* --------------------------------- PUBLIC FUNCTIONS ---------------------------------*/
