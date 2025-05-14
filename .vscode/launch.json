@@ -93,7 +93,7 @@
                 "timespan": 5,
                 "type": "realtime",
                 "annotate": false,
-                "maximum": 5000,
+                "maximum": 66000,
                 "minimum": -2000,
                 "plots": [
                     {
@@ -113,7 +113,7 @@
                 "timespan": 5,
                 "type": "realtime",
                 "annotate": false,
-                "maximum": 5000,
+                "maximum": 66000,
                 "minimum": -2000,
                 "plots": [
                     {
@@ -128,7 +128,7 @@
                 "timespan": 5,
                 "type": "realtime",
                 "annotate": false,
-                "maximum": 5000,
+                "maximum": 66000,
                 "minimum": -2000,
                 "plots": [
                     {
