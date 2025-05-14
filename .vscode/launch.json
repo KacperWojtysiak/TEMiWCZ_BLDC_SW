@@ -69,27 +69,77 @@
                         "port": 1,
                         "label": "Graph 1",
                         "showOnStartup": true
+                    },
+                    {
+                        "graphId": "2",
+                        "type": "graph",
+                        "port": 2,
+                        "label": "Graph 2",
+                        "showOnStartup": true
+                    },
+                    {
+                        "graphId": "3",
+                        "type": "graph",
+                        "port": 3,
+                        "label": "Graph 3",
+                        "showOnStartup": true
                     }
                 ]
                 
             },
-    //         "graphConfig": [
-    //             {
-    //             "label": "Graph 1",
-    //             "timespan": 5,
-    //             "type": "realtime",
-    //             "annotate": false,
-    //             "maximum": 5000,
-    //             "minimum": -2000,
-    //             "plots": [
-    //                 {
-    //                 "graphId": "1",
-    //                 "label": "BUFFER",
-    //                 "color": "#53753c" ,
-    //                 }
-    //             ]
-    //             }
-    //   ]
+            "graphConfig": [
+                {
+                "label": "Graph 1",
+                "timespan": 5,
+                "type": "realtime",
+                "annotate": false,
+                "maximum": 5000,
+                "minimum": -2000,
+                "plots": [
+                    {
+                    "graphId": "1",
+                    "label": "Graph 1",
+                    "color": "#00FF00" ,
+                    },
+                    //                     {
+                    // "graphId": "2",
+                    // "label": "Graph 2",
+                    // "color": "#FF0000" ,
+                    // }
+                ]
+                },
+                {
+                "label": "Graph 2",
+                "timespan": 5,
+                "type": "realtime",
+                "annotate": false,
+                "maximum": 5000,
+                "minimum": -2000,
+                "plots": [
+                    {
+                    "graphId": "2",
+                    "label": "Graph 2",
+                    "color": "#FF0000" ,
+                    }
+                ]
+                },
+                {
+                "label": "Graph 3",
+                "timespan": 5,
+                "type": "realtime",
+                "annotate": false,
+                "maximum": 5000,
+                "minimum": -2000,
+                "plots": [
+                    {
+                    "graphId": "3",
+                    "label": "Graph 3",
+                    "color": "#0000FF" ,
+                    }
+                ]
+                }
+      ]
+      
         },
         {
             "name": "Attach to Microcontroller - ST-Link",

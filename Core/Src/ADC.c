@@ -33,7 +33,9 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* adc){ // ADC interrupt no DMA
   }
   
   if (adc->Instance == ADC2){
-    // ITM_SendValue(1, (uint32_t)currentBuffer[0] );
+    ITM_SendValue(1, (uint32_t)currentBuffer[0] );
+    ITM_SendValue(2, (uint32_t)currentBuffer[1] );
+    ITM_SendValue(3, (uint32_t)currentBuffer[2] );
   }
 }
 
