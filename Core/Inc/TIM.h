@@ -20,7 +20,7 @@ extern "C" {
 
 /* --------------------------------- PUBLIC VARIABLES ---------------------------------*/
 /* PWM generation and current reading */
-#define PWM_FREQUENCY                       10000
+#define PWM_FREQUENCY                       1000
 #define PWM_FREQ_SCALING                    1
 // #define LOW_SIDE_SIGNALS_ENABLING           LS_PWM_TIMER
 #define DEADTIME_NS                         565 /*!< Dead-time to be inserted by FW, only if low side signals are enabled */
@@ -28,7 +28,7 @@ extern "C" {
 #define ADV_TIM_CLK_MHz   170
 #define TIM_CLOCK_DIVIDER 170
 #define PWM_PERIOD_CYCLES (uint16_t)((ADV_TIM_CLK_MHz * 1000000u) / (TIM_CLOCK_DIVIDER * PWM_FREQUENCY)) //(uint16_t)(((uint32_t)ADV_TIM_CLK_MHz * (uint32_t)1000000u / ((uint32_t)(PWM_FREQUENCY))) & (uint16_t)0xFFFE)
-#define PWM_DUTY_CYCLE                           50 // [%]
+#define PWM_DUTY_CYCLE                           0 // [%]
 #define PWM_PULSE                                (PWM_DUTY_CYCLE * PWM_PERIOD_CYCLES / 100)
 
 #define REGULATION_EXECUTION_RATE 1 /*!< FOC execution rate in number of PWM cycles */

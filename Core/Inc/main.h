@@ -61,6 +61,7 @@ void Error_Handler(void);
 #include "DMA.h"
 #include "USB.h"
 #include "TIM.h"
+#include "Scheduler.h"
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
@@ -84,15 +85,18 @@ void Error_Handler(void);
 #define NSCS_GPIO_Port GPIOC
 #define SENS_V_C_Pin GPIO_PIN_0
 #define SENS_V_C_GPIO_Port GPIOB
-#define BTN_2_Pin GPIO_PIN_12
-#define BTN_2_GPIO_Port GPIOB
-#define BTN_2_EXTI_IRQn EXTI15_10_IRQn
+#define TIM1_BRK_Pin GPIO_PIN_10
+#define TIM1_BRK_GPIO_Port GPIOB
 #define TIM1_CH3N_Pin GPIO_PIN_13
 #define TIM1_CH3N_GPIO_Port GPIOB
+#define TIM1_CH2N_Pin GPIO_PIN_14
+#define TIM1_CH2N_GPIO_Port GPIOB
 #define TIM1_CH1N_Pin GPIO_PIN_15
 #define TIM1_CH1N_GPIO_Port GPIOB
 #define TIM1_CH3_Pin GPIO_PIN_8
 #define TIM1_CH3_GPIO_Port GPIOA
+#define TIM1_CH2_Pin GPIO_PIN_9
+#define TIM1_CH2_GPIO_Port GPIOA
 #define TIM1_CH1_Pin GPIO_PIN_10
 #define TIM1_CH1_GPIO_Port GPIOA
 #define T_SWDIO_Pin GPIO_PIN_13

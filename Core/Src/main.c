@@ -126,12 +126,12 @@ int main(void)
   MX_USART1_UART_Init();
   MX_USB_Device_Init();
   /* USER CODE BEGIN 2 */
-  // ADC_StartDMA_ADC();
+  ADC_StartDMA_ADC();
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
   TIM_StartTIM1();
 
-  #define SIZE 4
-  const uint8_t data[SIZE] = {0,1,2,3};
+  // #define SIZE 4
+  // const uint8_t data[SIZE] = {0,1,2,3};
   // HAL_UART_Transmit_IT(&huart1, data, SIZE);
   /* USER CODE END 2 */
 
@@ -493,7 +493,7 @@ static void MX_TIM1_Init(void)
   sBreakDeadTimeConfig.OffStateIDLEMode = TIM_OSSI_ENABLE;
   sBreakDeadTimeConfig.LockLevel = TIM_LOCKLEVEL_OFF;
   sBreakDeadTimeConfig.DeadTime = DEADTIME_NS;
-  sBreakDeadTimeConfig.BreakState = TIM_BREAK_DISABLE; // Enable
+  sBreakDeadTimeConfig.BreakState = TIM_BREAK_DISABLE;
   sBreakDeadTimeConfig.BreakPolarity = TIM_BREAKPOLARITY_HIGH;
   sBreakDeadTimeConfig.BreakFilter = 3;
   sBreakDeadTimeConfig.BreakAFMode = TIM_BREAK_AFMODE_INPUT;

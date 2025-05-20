@@ -39,7 +39,7 @@ uint16_t DRV8323regCsaCtrl =
   1 << 10 | //CSA_FET
   1 << 9  | //VREF_DIV
   0 << 8  | //LS_REF
-  2 << 6  | //CSA_GAIN
+  0 << 6  | //CSA_GAIN // 2 -> 20-V/V // 1 -> 10-V/V
   0 << 5  | //DIS_SEN
   0 << 4  | //CSA_CAL_A
   0 << 3  | //CCSA_CAL_B

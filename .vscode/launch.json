@@ -87,58 +87,58 @@
                 ]
                 
             },
-            "graphConfig": [
-                {
-                "label": "Graph 1",
-                "timespan": 5,
-                "type": "realtime",
-                "annotate": false,
-                "maximum": 66000,
-                "minimum": -2000,
-                "plots": [
-                    {
-                    "graphId": "1",
-                    "label": "Graph 1",
-                    "color": "#00FF00" ,
-                    },
-                    //                     {
-                    // "graphId": "2",
-                    // "label": "Graph 2",
-                    // "color": "#FF0000" ,
-                    // }
-                ]
-                },
-                {
-                "label": "Graph 2",
-                "timespan": 5,
-                "type": "realtime",
-                "annotate": false,
-                "maximum": 66000,
-                "minimum": -2000,
-                "plots": [
-                    {
-                    "graphId": "2",
-                    "label": "Graph 2",
-                    "color": "#FF0000" ,
-                    }
-                ]
-                },
-                {
-                "label": "Graph 3",
-                "timespan": 5,
-                "type": "realtime",
-                "annotate": false,
-                "maximum": 66000,
-                "minimum": -2000,
-                "plots": [
-                    {
-                    "graphId": "3",
-                    "label": "Graph 3",
-                    "color": "#0000FF" ,
-                    }
-                ]
-                }
-      ]
+    //         "graphConfig": [
+    //             {
+    //             "label": "Graph 1",
+    //             "timespan": 5,
+    //             "type": "realtime",
+    //             "annotate": false,
+    //             "maximum": 66000,
+    //             "minimum": -2000,
+    //             "plots": [
+    //                 {
+    //                 "graphId": "1",
+    //                 "label": "Graph 1",
+    //                 "color": "#00FF00" ,
+    //                 },
+    //                 //                     {
+    //                 // "graphId": "2",
+    //                 // "label": "Graph 2",
+    //                 // "color": "#FF0000" ,
+    //                 // }
+    //             ]
+    //             },
+    //             {
+    //             "label": "Graph 2",
+    //             "timespan": 5,
+    //             "type": "realtime",
+    //             "annotate": false,
+    //             "maximum": 66000,
+    //             "minimum": -2000,
+    //             "plots": [
+    //                 {
+    //                 "graphId": "2",
+    //                 "label": "Graph 2",
+    //                 "color": "#FF0000" ,
+    //                 }
+    //             ]
+    //             },
+    //             {
+    //             "label": "Graph 3",
+    //             "timespan": 5,
+    //             "type": "realtime",
+    //             "annotate": false,
+    //             "maximum": 66000,
+    //             "minimum": -2000,
+    //             "plots": [
+    //                 {
+    //                 "graphId": "3",
+    //                 "label": "Graph 3",
+    //                 "color": "#0000FF" ,
+    //                 }
+    //             ]
+    //             }
+    //   ]
       
         },
         {
