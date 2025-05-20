@@ -16,14 +16,13 @@ extern "C" {
 
 /* ------------------------------------- INCLUDES -------------------------------------*/
 #include "stm32g4xx_hal.h"
+#include "usbd_cdc_if.h"
 #include "main.h"
 
 /* --------------------------------- PUBLIC VARIABLES ---------------------------------*/
-extern PCD_HandleTypeDef hpcd_USB_FS;
 
 /* --------------------------------- PUBLIC FUNCTIONS ---------------------------------*/
-void USB_PCD_Init(void);
-
+void USB_Send();
 
 #ifdef __cplusplus
 }
