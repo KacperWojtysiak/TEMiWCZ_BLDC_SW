@@ -131,6 +131,10 @@ int main(void)
   ADC_StartDMA_ADC();
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
   TIM_StartTIM1();
+
+  #define SIZE 4
+  const uint8_t data[SIZE] = {0,1,2,3};
+  HAL_UART_Transmit_IT(&huart1, data, SIZE);
   /* USER CODE END 2 */
 
   /* Infinite loop */
