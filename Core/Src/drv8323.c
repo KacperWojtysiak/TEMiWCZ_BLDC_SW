@@ -37,7 +37,7 @@ uint16_t DRV8323regOcpCtrl =
 
 uint16_t DRV8323regCsaCtrl =
   1 << 10 | //CSA_FET
-  1 << 9  | //VREF_DIV
+  0 << 9  | //VREF_DIV
   0 << 8  | //LS_REF
   0 << 6  | //CSA_GAIN // 2 -> 20-V/V // 1 -> 10-V/V
   0 << 5  | //DIS_SEN
@@ -87,7 +87,17 @@ void DRV8323_setupSpi()
 	HAL_Delay(1);
 	DRV8323_writeSpi(ADR_OCP_CTRL, DRV8323regOcpCtrl);
 	HAL_Delay(1);
+
+  //With callibration
+  DRV8323regCsaCtrl |=  1 << 4  | //CSA_CAL_A
+                        1 << 3  | //CCSA_CAL_B
+                        1 << 2;   //CCSA_CAL_C
 	DRV8323_writeSpi(ADR_CSA_CTRL, DRV8323regCsaCtrl);
+	HAL_Delay(1);
+
+  // After calibration
+  DRV8323regCsaCtrl &= ~( (1 << 4) | (1 << 3) | (1 << 2) );
+  DRV8323_writeSpi(ADR_CSA_CTRL, DRV8323regCsaCtrl);
 	HAL_Delay(1);
 
     temp = DRV8323_readSpi(ADR_FAULT_STAT);

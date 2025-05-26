@@ -51,7 +51,7 @@
             "interface": "swd",
             "device": "STM32G431RBTx", //MCU used
             "swoConfig": {
-                "enabled": true,
+                // "enabled": true,
                 "cpuFrequency": 170000000,
                 "swoFrequency":  2000000,
                 "source": "probe",
@@ -87,58 +87,58 @@
                 ]
                 
             },
-    //         "graphConfig": [
-    //             {
-    //             "label": "Graph 1",
-    //             "timespan": 5,
-    //             "type": "realtime",
-    //             "annotate": false,
-    //             "maximum": 66000,
-    //             "minimum": -2000,
-    //             "plots": [
-    //                 {
-    //                 "graphId": "1",
-    //                 "label": "Graph 1",
-    //                 "color": "#00FF00" ,
-    //                 },
-    //                 //                     {
-    //                 // "graphId": "2",
-    //                 // "label": "Graph 2",
-    //                 // "color": "#FF0000" ,
-    //                 // }
-    //             ]
-    //             },
-    //             {
-    //             "label": "Graph 2",
-    //             "timespan": 5,
-    //             "type": "realtime",
-    //             "annotate": false,
-    //             "maximum": 66000,
-    //             "minimum": -2000,
-    //             "plots": [
-    //                 {
-    //                 "graphId": "2",
-    //                 "label": "Graph 2",
-    //                 "color": "#FF0000" ,
-    //                 }
-    //             ]
-    //             },
-    //             {
-    //             "label": "Graph 3",
-    //             "timespan": 5,
-    //             "type": "realtime",
-    //             "annotate": false,
-    //             "maximum": 66000,
-    //             "minimum": -2000,
-    //             "plots": [
-    //                 {
-    //                 "graphId": "3",
-    //                 "label": "Graph 3",
-    //                 "color": "#0000FF" ,
-    //                 }
-    //             ]
-    //             }
-    //   ]
+            "graphConfig": [
+                {
+                "label": "Shunt currents",
+                "timespan": 5,
+                "type": "realtime",
+                "annotate": false,
+                "maximum": 26000,
+                "minimum": -2000,
+                "plots": [
+                    {
+                    "graphId": "1",
+                    "label": "U shunt",
+                    "color": "#00FF00" ,
+                    },
+                    {
+                    "graphId": "2",
+                    "label": "V shunt",
+                    "color": "#FF0000" ,
+                    },
+                    {
+                    "graphId": "3",
+                    "label": "W shunt",
+                    "color": "#0000FF" ,
+                    }
+                ]
+                },
+                // {
+                // "label": "Graph 1",
+                // "timespan": 5,
+                // "type": "realtime",
+                // "annotate": false,
+                // "maximum": 66000,
+                // "minimum": -2000,
+                // "plots": [
+                //     {
+                //     "graphId": "1",
+                //     "label": "Graph 1",
+                //     "color": "#00FF00" ,
+                //     },
+                //     {
+                //     "graphId": "2",
+                //     "label": "Graph 2",
+                //     "color": "#FF0000" ,
+                //     },
+                //     {
+                //     "graphId": "3",
+                //     "label": "Graph 3",
+                //     "color": "#0000FF" ,
+                //     }
+                // ]
+                // }
+      ]
       
         },
         {

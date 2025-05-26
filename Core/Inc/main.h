@@ -62,6 +62,7 @@ void Error_Handler(void);
 #include "USB.h"
 #include "TIM.h"
 #include "Scheduler.h"
+#include "SPD.h"
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
@@ -114,6 +115,7 @@ void Error_Handler(void);
 #define BTN_1_EXTI_IRQn EXTI9_5_IRQn
 
 /* USER CODE BEGIN Private defines */
+void ITM_SendValue (int port, uint32_t value);
 
 /* USER CODE END Private defines */
 

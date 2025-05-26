@@ -442,7 +442,15 @@ __weak void BADC_IsZcDetected(Bemf_ADC_Handle_t *pHandle, uint8_t step)
     }
     if (true == pHandle->IsLoopClosed)
     {
-      if (CC_Counter >= CounterAutoreload) CC_Counter -= CounterAutoreload;
+      if (CC_Counter >= CounterAutoreload)
+        CC_Counter -= CounterAutoreload;
+
+      // zabezpieczenie przed ustawieniem CC_Counter w przeszłości
+      uint32_t now = LL_TIM_GetCounter(pHandle->pParams_str->LfTim);
+      if ((int32_t)(CC_Counter - now) < 100) {
+        CC_Counter = now + 200; // wymuś minimum 200 µs w przyszłości
+      }
+
       LL_TIM_OC_SetCompareCH1(pHandle->pParams_str->LfTim, CC_Counter);
     }
     pHandle->Last_TimerSpeed_Counter = TimerSpeed_Counter;

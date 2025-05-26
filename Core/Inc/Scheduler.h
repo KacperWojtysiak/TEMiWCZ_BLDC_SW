@@ -19,9 +19,20 @@ extern "C" {
 #include "main.h"
 
 /* --------------------------------- PUBLIC VARIABLES ---------------------------------*/
+typedef struct {
+    uint16_t tick;
+    uint8_t step;
+    const uint16_t pwmDuty;
+} McScheduler_t;
+
+extern McScheduler_t mc;
 
 /* --------------------------------- PUBLIC FUNCTIONS ---------------------------------*/
 void Task();
+void Task1ms();
+void Task10ms();
+void Task100ms();
+void SixStepTask();
 
 #ifdef __cplusplus
 }

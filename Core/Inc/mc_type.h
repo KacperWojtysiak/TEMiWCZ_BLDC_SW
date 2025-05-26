@@ -26,14 +26,14 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "fixpmath.h"
-#include "impedcorr.h"
+// #include "fixpmath.h"
+// #include "impedcorr.h"
 #include "hso.h"
-#include "polpulse.h"
-#include "pidreg_speed.h"
-#include "pidregdqx_current.h"
+// #include "polpulse.h"
+// #include "pidreg_speed.h"
+// #include "pidregdqx_current.h"
 #ifndef PROFILER_DISABLE
-#include "profiler_handle.h"
+// #include "profiler_handle.h"
 #endif /* PROFILER_DISABLE */
 #ifdef __cplusplus
 extern "C" {
