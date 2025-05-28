@@ -38,8 +38,11 @@
 #define PAREN(...) (__VA_ARGS__)
 
 /* Standard min/max macros. */
-#define MIN(x,y) (((x) < (y)) ? (x) : (y) )
+#define MIN(x,y) (((x) < (y)) ? (x) : (y) )c
+#ifndef MAX
 #define MAX(x,y) (((x) > (y)) ? (x) : (y) )
+#endif
+
 
 /**
  *  Bound value using low and high limits.

@@ -44,6 +44,7 @@ add_subdirectory(cmake/stm32cubemx)
 set(MotorControl_Src
     ${CMAKE_SOURCE_DIR}/MCSDK/MCLib/G4xx/Src/g4xx_bemf_ADC_fdbk.c
     ${CMAKE_SOURCE_DIR}/MCSDK/MCLib/Any/Src/speed_pos_fdbk.c
+    ${CMAKE_SOURCE_DIR}/MCSDK/MCLib/Any/Src/pwmc_sixstep.c
 )
 
 # Link directories setup

@@ -606,7 +606,7 @@ typedef enum
 /** @name Utility macros definitions */
 /** @{ */
 #define RPM2MEC01HZ(rpm) (int16_t)((int32_t)(rpm)/6)
-#define MAX(a,b) (((a)>(b))?(a):(b))
+// #define MAX(a,b) (((a)>(b))?(a):(b))
 /** @} */
 
 /**

@@ -20,7 +20,7 @@ extern "C" {
 
 /* --------------------------------- PUBLIC VARIABLES ---------------------------------*/
 /* PWM generation and current reading */
-#define PWM_FREQUENCY                       1000
+#define PWM_FREQUENCY                       2000
 #define PWM_FREQ_SCALING                    1
 // #define LOW_SIDE_SIGNALS_ENABLING           LS_PWM_TIMER
 #define DEADTIME_NS                         565 /*!< Dead-time to be inserted by FW, only if low side signals are enabled */

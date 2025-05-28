@@ -46,6 +46,10 @@ ADC_HandleTypeDef hadc2;
 DMA_HandleTypeDef hdma_adc1;
 DMA_HandleTypeDef hdma_adc2;
 
+COMP_HandleTypeDef hcomp1;
+COMP_HandleTypeDef hcomp2;
+COMP_HandleTypeDef hcomp4;
+
 SPI_HandleTypeDef hspi1;
 
 TIM_HandleTypeDef htim1;
@@ -69,6 +73,9 @@ static void MX_TIM3_Init(void);
 static void MX_ADC2_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_TIM2_Init(void);
+static void MX_COMP1_Init(void);
+static void MX_COMP2_Init(void);
+static void MX_COMP4_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -128,9 +135,15 @@ int main(void)
   MX_USART1_UART_Init();
   MX_USB_Device_Init();
   MX_TIM2_Init();
+  MX_COMP1_Init();
+  MX_COMP2_Init();
+  MX_COMP4_Init();
   /* USER CODE BEGIN 2 */
-  bemfHandle.TIMClockFreq = HAL_RCC_GetPCLK1Freq();
-  BADC_Init(&bemfHandle);
+  // InitPWM();
+  HAL_COMP_Start(&hcomp1);
+  HAL_COMP_Start(&hcomp2);
+  HAL_COMP_Start(&hcomp4);
+  InitBEMF();
   DRV8323_setupSpi();
   ADC_StartDMA_ADC();
   TIM_StartTIM1();
@@ -268,7 +281,7 @@ static void MX_ADC1_Init(void)
   */
   sConfig.Channel = ADC_CHANNEL_2;
   sConfig.Rank = ADC_REGULAR_RANK_1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_47CYCLES_5;
+  sConfig.SamplingTime = ADC_SAMPLETIME_6CYCLES_5;
   sConfig.SingleDiff = ADC_SINGLE_ENDED;
   sConfig.OffsetNumber = ADC_OFFSET_NONE;
   sConfig.Offset = 0;
@@ -333,7 +346,7 @@ static void MX_ADC2_Init(void)
   hadc2.Init.DiscontinuousConvMode = DISABLE;
   hadc2.Init.ExternalTrigConv = ADC_EXTERNALTRIG_T3_TRGO;
   hadc2.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_FALLING;
-  hadc2.Init.DMAContinuousRequests = ENABLE;
+  hadc2.Init.DMAContinuousRequests = DISABLE;
   hadc2.Init.Overrun = ADC_OVR_DATA_PRESERVED;
   hadc2.Init.OversamplingMode = DISABLE;
   if (HAL_ADC_Init(&hadc2) != HAL_OK)
@@ -345,7 +358,7 @@ static void MX_ADC2_Init(void)
   */
   sConfig.Channel = ADC_CHANNEL_7;
   sConfig.Rank = ADC_REGULAR_RANK_1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_47CYCLES_5;
+  sConfig.SamplingTime = ADC_SAMPLETIME_6CYCLES_5;
   sConfig.SingleDiff = ADC_SINGLE_ENDED;
   sConfig.OffsetNumber = ADC_OFFSET_NONE;
   sConfig.Offset = 0;
@@ -374,6 +387,101 @@ static void MX_ADC2_Init(void)
   /* USER CODE BEGIN ADC2_Init 2 */
 
   /* USER CODE END ADC2_Init 2 */
+
+}
+
+/**
+  * @brief COMP1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_COMP1_Init(void)
+{
+
+  /* USER CODE BEGIN COMP1_Init 0 */
+
+  /* USER CODE END COMP1_Init 0 */
+
+  /* USER CODE BEGIN COMP1_Init 1 */
+
+  /* USER CODE END COMP1_Init 1 */
+  hcomp1.Instance = COMP1;
+  hcomp1.Init.InputPlus = COMP_INPUT_PLUS_IO1;
+  hcomp1.Init.InputMinus = COMP_INPUT_MINUS_IO2;
+  hcomp1.Init.OutputPol = COMP_OUTPUTPOL_NONINVERTED;
+  hcomp1.Init.Hysteresis = COMP_HYSTERESIS_NONE;
+  hcomp1.Init.BlankingSrce = COMP_BLANKINGSRC_NONE;
+  hcomp1.Init.TriggerMode = COMP_TRIGGERMODE_IT_RISING_FALLING;
+  if (HAL_COMP_Init(&hcomp1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN COMP1_Init 2 */
+  /* USER CODE END COMP1_Init 2 */
+
+}
+
+/**
+  * @brief COMP2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_COMP2_Init(void)
+{
+
+  /* USER CODE BEGIN COMP2_Init 0 */
+
+  /* USER CODE END COMP2_Init 0 */
+
+  /* USER CODE BEGIN COMP2_Init 1 */
+
+  /* USER CODE END COMP2_Init 1 */
+  hcomp2.Instance = COMP2;
+  hcomp2.Init.InputPlus = COMP_INPUT_PLUS_IO2;
+  hcomp2.Init.InputMinus = COMP_INPUT_MINUS_IO2;
+  hcomp2.Init.OutputPol = COMP_OUTPUTPOL_NONINVERTED;
+  hcomp2.Init.Hysteresis = COMP_HYSTERESIS_NONE;
+  hcomp2.Init.BlankingSrce = COMP_BLANKINGSRC_NONE;
+  hcomp2.Init.TriggerMode = COMP_TRIGGERMODE_IT_RISING_FALLING;
+  if (HAL_COMP_Init(&hcomp2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN COMP2_Init 2 */
+  /* USER CODE END COMP2_Init 2 */
+
+}
+
+/**
+  * @brief COMP4 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_COMP4_Init(void)
+{
+
+  /* USER CODE BEGIN COMP4_Init 0 */
+
+  /* USER CODE END COMP4_Init 0 */
+
+  /* USER CODE BEGIN COMP4_Init 1 */
+
+  /* USER CODE END COMP4_Init 1 */
+  hcomp4.Instance = COMP4;
+  hcomp4.Init.InputPlus = COMP_INPUT_PLUS_IO1;
+  hcomp4.Init.InputMinus = COMP_INPUT_MINUS_IO2;
+  hcomp4.Init.OutputPol = COMP_OUTPUTPOL_NONINVERTED;
+  hcomp4.Init.Hysteresis = COMP_HYSTERESIS_NONE;
+  hcomp4.Init.BlankingSrce = COMP_BLANKINGSRC_NONE;
+  hcomp4.Init.TriggerMode = COMP_TRIGGERMODE_IT_RISING_FALLING;
+  if (HAL_COMP_Init(&hcomp4) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN COMP4_Init 2 */
+  HAL_NVIC_SetPriority(COMP1_2_3_IRQn, 1, 0);
+  HAL_NVIC_EnableIRQ(COMP1_2_3_IRQn);
+  /* USER CODE END COMP4_Init 2 */
 
 }
 

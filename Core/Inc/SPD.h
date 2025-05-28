@@ -19,14 +19,15 @@ typedef struct {
 } SPD_t;
 
 extern SPD_t spd;
-extern PWMC_Handle_t PWM_Handle;
 extern Bemf_ADC_Handle_t bemfHandle;
 extern BusVoltageSensor_Handle_t BusVoltageHandle;
 extern const Bemf_ADC_Params_t bemfAdcParams;
-/* --------------------------------- PUBLIC FUNCTIONS ---------------------------------*/
-void UpdateSpeedFromBEMF(void);
-void ConfigureSampling(void);
+extern PWMC_Handle_t pwmHandle;
 
+/* --------------------------------- PUBLIC FUNCTIONS ---------------------------------*/
+void InitBEMF(void);
+void InitPWM(void);
+void SPD_UpdateSpeedFromBEMF(void);
 
 #ifdef __cplusplus
 }

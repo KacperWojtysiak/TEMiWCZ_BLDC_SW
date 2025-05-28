@@ -56,6 +56,7 @@ void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
 #include <stdio.h>
+#include <stdbool.h>
 #include "GPIO.h"
 #include "ADC.h"
 #include "DMA.h"
@@ -76,8 +77,12 @@ void Error_Handler(void);
 #define SENS_I_B_GPIO_Port GPIOC
 #define SENS_I_C_Pin GPIO_PIN_3
 #define SENS_I_C_GPIO_Port GPIOC
+#define SENS_V_AN_Pin GPIO_PIN_0
+#define SENS_V_AN_GPIO_Port GPIOA
 #define SENS_V_A_Pin GPIO_PIN_1
 #define SENS_V_A_GPIO_Port GPIOA
+#define SENS_V_BN_Pin GPIO_PIN_2
+#define SENS_V_BN_GPIO_Port GPIOA
 #define SENS_V_B_Pin GPIO_PIN_3
 #define SENS_V_B_GPIO_Port GPIOA
 #define ENABLE_Pin GPIO_PIN_4
@@ -86,6 +91,8 @@ void Error_Handler(void);
 #define NSCS_GPIO_Port GPIOC
 #define SENS_V_C_Pin GPIO_PIN_0
 #define SENS_V_C_GPIO_Port GPIOB
+#define SENS_V_CN_Pin GPIO_PIN_2
+#define SENS_V_CN_GPIO_Port GPIOB
 #define TIM1_BRK_Pin GPIO_PIN_10
 #define TIM1_BRK_GPIO_Port GPIOB
 #define TIM1_CH3N_Pin GPIO_PIN_13

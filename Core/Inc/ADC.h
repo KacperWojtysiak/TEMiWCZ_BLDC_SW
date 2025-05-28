@@ -33,10 +33,16 @@ extern ADC_HandleTypeDef hadc1;
 extern ADC_HandleTypeDef hadc2;
 extern uint16_t currentBuffer[ADC_CURR_BUFFER_SIZE];
 extern uint16_t voltageBuffer[ADC_VOLT_BUFFER_SIZE];
+// historia próbki BEMF do porównania
+static const uint8_t bemfChannelForStep[6] = {2, 2, 1, 1, 0, 0}; // W, W, V, V, U, U
+extern volatile uint16_t bemfLast;
+extern bool start;
 /* --------------------------------- PUBLIC FUNCTIONS ---------------------------------*/
 void ADC_StartDMA_ADC();
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* adc);
+
+void ADC_BemfZeroCrossing();
 
 static inline uint16_t ADC_ValueToVoltage(uint16_t adcValue)
 {
