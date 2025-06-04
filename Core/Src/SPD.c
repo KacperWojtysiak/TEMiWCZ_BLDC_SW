@@ -11,7 +11,7 @@ SPD_t spd = {
     .speedRPM = 0
 };
 
-BusVoltageSensor_Handle_t BusVoltageHandle = {
+BusVoltageSensor_Handle_t busVoltageHandle = {
     .SensorType        = VIRTUAL_SENSOR,  // nie używasz fizycznego czujnika napięcia
     .ConversionFactor  = 3300,            // 3300 mV = 100% — 1 jednostka = 1 mV
     .LatestConv        = 3300,            // aktualne napięcie magistrali (mV)
@@ -29,29 +29,7 @@ static PWMC_Params_t pwmParams = {
     .pwm_en_w_pin = SENS_V_C_Pin
 };
 
-PWMC_Handle_t pwmHandle;// = {
-//     .CntPh             = PWM_PULSE,     // np. 50% wypełnienia przy ARR = 600
-//     .StartCntPh        = 300,     // początkowe wypełnienie (przy starcie)
-//     .ADCTriggerCnt     = PWM_PULSE,     // moment wyzwolenia ADC (w cyklach PWM)
-//     .PWMperiod         = PWM_PERIOD_CYCLES,     // okres PWM (ARR)
-//     .AlignFlag         = 0,       // brak błędu wyrównania
-//     .NextStep          = 0,       // używane w niektórych aplikacjach 6-step
-//     .Step              = 0,
-//     .LSModArray        = {0, 1, 0, 1, 0, 1}, // typowo: 0–LS, 1–HS
-//     .hElAngle          = 0,
-//     .OverCurrentFlag   = false,
-//     .OverVoltageFlag   = false,
-//     .BrakeActionLock   = false,
-//     .driverProtectionFlag = false,
-//     .TurnOnLowSidesAction = false,
-//     .QuasiSynchDecay   = false,
-//     .pParams_str       = &pwmParams,
-//     .pCCER_cfg         = NULL,
-//     .pCCMR1_cfg        = NULL,
-//     .pCCMR2_cfg        = NULL,
-//     .TimerCfg          = NULL,
-//     .LowSideOutputs    = LS_PWM_TIMER  // zakładamy że sterujesz timerem PWM bez specjalnych LS driverów
-// };
+PWMC_Handle_t pwmHandle;
 
 const Bemf_ADC_Params_t bemfAdcParams = {
     .LfTim = TIM2,                     // Timer do pomiaru czasu (ZC → ZC)
@@ -63,12 +41,11 @@ const Bemf_ADC_Params_t bemfAdcParams = {
         ADC_CHANNEL_15, // PC5 → faza C
         0, 0, 0
     },
-    .gpio_divider_available = false,  // brak załączanego dzielnika
-    .bemf_divider_port = NULL,
-    .bemf_divider_pin = 0
+    .gpio_divider_available = false,  // no divider GPIO
 };
 
 Bemf_ADC_Handle_t bemfHandle = {
+    .ZcEvents = 0,
     .pParams_str = &bemfAdcParams,
     .SpeedSamplingFreqHz = 100,
     .IsLoopClosed = true, // Rozruch, potem true
@@ -77,7 +54,7 @@ Bemf_ADC_Handle_t bemfHandle = {
     .SatSpeed = 32000,
 };
 
-Bemf_Sensing_Params bemfAdcConcfig = {
+Bemf_Sensing_Params bemfAdcConfig = {
     .AdcThresholdPwmPerc  = 15,   // 15% Vbus – dla wysokiego duty (ON-sensing)
     .AdcThresholdHighPerc = 65,   // 65% Vbus – dla detekcji opadającej
     .AdcThresholdLowPerc  = 35,   // 35% Vbus – dla detekcji rosnącej
@@ -119,7 +96,7 @@ void InitPWM(void)
 }
 
 void InitBEMF(void){
-    // BADC_SetBemfSensorlessParam(&bemfHandle, &bemfAdcConcfig, &zcRising2CommDelay, &zcFalling2CommDelay, 
+    // BADC_SetBemfSensorlessParam(&bemfHandle, &bemfAdcConfig, &zcRising2CommDelay, &zcFalling2CommDelay, 
     //                             &bemfDemagConfig, &onSensingEnableThres, &onSensingDisableThres, &computationDelay);
 
     bemfHandle.TIMClockFreq = HAL_RCC_GetPCLK1Freq();
@@ -132,7 +109,8 @@ void InitBEMF(void){
 void SPD_UpdateSpeedFromBEMF()
 {
     if (BADC_CalcAvrgMecSpeedUnit(&bemfHandle, &spd.speedRPM)) {
-        ITM_SendValue(1, (uint32_t)spd.speedRPM );
+        printf("Speed: %d RPM\n", spd.speedRPM);
+        // ITM_SendValue(1, (uint32_t)spd.speedRPM );
         // Send to USB CDC
         // char msg[32];
         // snprintf(msg, sizeof(msg), "Speed: %d RPM\r\n", speedRPM);
@@ -142,34 +120,18 @@ void SPD_UpdateSpeedFromBEMF()
 
 void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp)
 {
+    // ⚡
     if ( start ) return;
-    uint8_t step = 0xFF;
-    switch (mc.step)
-    {
-        case 0:
-            if (hcomp->Instance == COMP4) step = STEP_1; // W
-            break;
-        case 1:
-            if (hcomp->Instance == COMP2) step = STEP_2; // V
-            break;
-        case 2:
-            if (hcomp->Instance == COMP1) step = STEP_3; // U
-            break;
-        case 3:
-            if (hcomp->Instance == COMP4) step = STEP_4; // W
-            break;
-        case 4:
-            if (hcomp->Instance == COMP2) step = STEP_5; // V
-            break;
-        case 5:
-            if (hcomp->Instance == COMP1) step = STEP_6; // U
-            break;
-    }
+    DisableAllZCInterrupts();
+    BADC_IsZcDetected(&bemfHandle, mc.step);
+}
 
-    if (step != 0xFF)
-    {
-        BADC_IsZcDetected(&bemfHandle, step);
-        mc.step = step;
-        // ⚡ Wykonaj natychmiastową komutację
-    }
+void EnableCurrentZCInterrupt(uint8_t step) {
+  HAL_COMP_Start(zcCompMap[step]);
+}
+
+void DisableAllZCInterrupts() {
+  HAL_COMP_Stop(&hcomp1);
+  HAL_COMP_Stop(&hcomp2);
+  HAL_COMP_Stop(&hcomp4);
 }

@@ -59,7 +59,15 @@ TIM_HandleTypeDef htim3;
 UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
-
+COMP_HandleTypeDef* zcCompMap[7] = {
+  NULL,      // index 0 nieużywany
+  &hcomp1,   // STEP_1 – float = U
+  &hcomp2,   // STEP_2 – float = V
+  &hcomp1,   // STEP_3 – float = U
+  &hcomp4,   // STEP_4 – float = W
+  &hcomp2,   // STEP_5 – float = V
+  &hcomp4    // STEP_6 – float = W
+};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/

@@ -20,7 +20,7 @@ typedef struct {
 
 extern SPD_t spd;
 extern Bemf_ADC_Handle_t bemfHandle;
-extern BusVoltageSensor_Handle_t BusVoltageHandle;
+extern BusVoltageSensor_Handle_t busVoltageHandle;
 extern const Bemf_ADC_Params_t bemfAdcParams;
 extern PWMC_Handle_t pwmHandle;
 

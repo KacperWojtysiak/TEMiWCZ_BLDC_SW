@@ -11,16 +11,15 @@
 #include "SPD.h"
 
 /* --------------------------------- PRIVATE VARIABLES ---------------------------------*/
-#define FAKE_SPEED_DPP 500
-
 volatile uint16_t tick = 1;
+volatile uint8_t startupCounter = 0;
+
 McScheduler_t mc = {
     .step = 0,
     .pwmDuty = 100,
     .enabled = false
 };
 
-volatile uint8_t startupCounter = 0;
 
 /* --------------------------------- PRIVATE FUNCTIONS ---------------------------------*/
 
@@ -36,23 +35,7 @@ void Task10ms(){
 void Task100ms(){
     HAL_GPIO_TogglePin(LED_2_GPIO_Port, LED_2_Pin);
     // CDC_Transmit_FS((uint8_t*)"DUPA", 4);
-    // SPD_UpdateSpeedFromBEMF();
-}
-
-void Starting(){
-    // SixStepTask();
-    // BADC_StepChangeEvent(&bemfHandle, FAKE_SPEED_DPP); // sztuczna prędkość
-    // BADC_CalcRevUpDemagTime(&bemfHandle); // czas rozmagnesowania
-
-    startupCounter++;
-    if (startupCounter >= 36) {
-        start = false;
-        // BADC_SetLoopClosed(&bemfHandle);
-        startupCounter = 0;
-    }
-    // else{
-    //     SixStepTask();
-    // }
+    SPD_UpdateSpeedFromBEMF();
 }
 
 void Task(){
@@ -69,6 +52,19 @@ void Task(){
     tick ++;
 }
 
+void Starting(){
+    // SixStepTask();
+    // BADC_StepChangeEvent(&bemfHandle, FAKE_SPEED_DPP); // sztuczna prędkość
+    // BADC_CalcRevUpDemagTime(&bemfHandle); // czas rozmagnesowania
+
+    startupCounter++;
+    if (startupCounter >= 36) {
+        start = false;
+        // BADC_SetLoopClosed(&bemfHandle);
+        startupCounter = 0;
+    }
+}
+
 void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim)
 {
     if (htim->Instance == TIM2 && htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1) {
@@ -80,7 +76,7 @@ void SixStepTask() {
     if (!mc.enabled) return;
 
     // pwmHandle.CntPh = mc.pwmDuty;
-    BADC_SetSamplingPoint(&bemfHandle, &pwmHandle, &BusVoltageHandle);
+    BADC_SetSamplingPoint(&bemfHandle, &pwmHandle, &busVoltageHandle);
 
     switch (mc.step) {
         case 0:
@@ -114,9 +110,7 @@ void SixStepTask() {
             __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, mc.pwmDuty);  // W+
             break;
     }
-    if ( start ) {
-        mc.step = (mc.step + 1) % 6;
-    }
+    mc.step = (mc.step + 1) % 6;
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
@@ -132,9 +126,8 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
             mc.step = 0;
             bemfLast = 0;
             // BADC_Clear(&bemfHandle);
-            BADC_SetDirection(&bemfHandle, 1);
+            // BADC_SetDirection(&bemfHandle, 1);
             startupCounter = 0;
-            mc.step = 0;
         } else {
             // zatrzymaj PWM (wszystkie kanały OFF)
             __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 0);

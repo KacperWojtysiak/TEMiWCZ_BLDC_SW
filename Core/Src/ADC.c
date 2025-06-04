@@ -14,6 +14,7 @@ uint16_t currentBuffer[ADC_CURR_BUFFER_SIZE];
 uint16_t voltageBuffer[ADC_VOLT_BUFFER_SIZE];
 volatile uint16_t bemfLast = 0;
 bool start = true; // Flaga do wykrywania zerowego przekroczenia BEMF
+const uint8_t bemfChannelForStep[6] = {2, 2, 1, 1, 0, 0}; // W, W, V, V, U, U
 
 /* --------------------------------- PRIVATE FUNCTIONS ---------------------------------*/
 
@@ -26,8 +27,6 @@ void ADC_StartDMA_ADC(){
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* adc){ // ADC interrupt no DMA
   if (adc->Instance == ADC1){
     // ITM_SendValue(1, (uint32_t)voltageBuffer[0] );
-    // ITM_SendValue(2, (uint32_t)voltageBuffer[1] );
-    // ITM_SendValue(3, (uint32_t)voltageBuffer[2] );
     if ( start ){
       BADC_IsZcDetected(&bemfHandle, mc.step);
     }
@@ -37,10 +36,6 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* adc){ // ADC interrupt no DMA
   }
 
   if (adc->Instance == ADC2){
-    // ADC_CalcCurrent(currentBuffer);
-    // ITM_SendValue(1, (uint32_t)currentBuffer[0] );
-    // ITM_SendValue(2, (uint32_t)currentBuffer[1] );
-    // ITM_SendValue(3, (uint32_t)currentBuffer[2] );
   }
 }
 

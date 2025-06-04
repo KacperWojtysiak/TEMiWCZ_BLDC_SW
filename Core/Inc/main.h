@@ -31,7 +31,15 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include <stdio.h>
+#include <stdbool.h>
+#include "GPIO.h"
+#include "ADC.h"
+#include "DMA.h"
+#include "USB.h"
+#include "TIM.h"
+#include "Scheduler.h"
+#include "SPD.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -55,15 +63,8 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-#include <stdio.h>
-#include <stdbool.h>
-#include "GPIO.h"
-#include "ADC.h"
-#include "DMA.h"
-#include "USB.h"
-#include "TIM.h"
-#include "Scheduler.h"
-#include "SPD.h"
+void ITM_SendValue (int port, uint32_t value);
+
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
@@ -122,8 +123,10 @@ void Error_Handler(void);
 #define BTN_1_EXTI_IRQn EXTI9_5_IRQn
 
 /* USER CODE BEGIN Private defines */
-void ITM_SendValue (int port, uint32_t value);
-
+extern COMP_HandleTypeDef* zcCompMap[7];
+extern COMP_HandleTypeDef hcomp1;
+extern COMP_HandleTypeDef hcomp2;
+extern COMP_HandleTypeDef hcomp4;
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
