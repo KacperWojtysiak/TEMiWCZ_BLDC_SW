@@ -22,6 +22,8 @@
 #include "stm32g4xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "FOC.h"
+#include "mc_config.h"
 
 /* USER CODE END Includes */
 
@@ -254,7 +256,7 @@ void ADC1_2_IRQHandler(void)
   HAL_ADC_IRQHandler(&hadc1);
   HAL_ADC_IRQHandler(&hadc2);
   /* USER CODE BEGIN ADC1_2_IRQn 1 */
-
+  FOC_HighFrequencyTask();
   /* USER CODE END ADC1_2_IRQn 1 */
 }
 
@@ -310,7 +312,10 @@ void TIM1_BRK_TIM15_IRQHandler(void)
   /* USER CODE END TIM1_BRK_TIM15_IRQn 0 */
   HAL_TIM_IRQHandler(&htim1);
   /* USER CODE BEGIN TIM1_BRK_TIM15_IRQn 1 */
+  PWMC_OVP_Handler(&PWM_Handle_M1._Super, TIM1);
 
+  /* Systick is not executed due low priority so is necessary to call MC_Scheduler here */
+  // MC_RunMotorControlTasks();
   /* USER CODE END TIM1_BRK_TIM15_IRQn 1 */
 }
 
@@ -324,7 +329,7 @@ void TIM1_UP_TIM16_IRQHandler(void)
   /* USER CODE END TIM1_UP_TIM16_IRQn 0 */
   HAL_TIM_IRQHandler(&htim1);
   /* USER CODE BEGIN TIM1_UP_TIM16_IRQn 1 */
-
+  R3_1_TIMx_UP_IRQHandler(&PWM_Handle_M1);
   /* USER CODE END TIM1_UP_TIM16_IRQn 1 */
 }
 

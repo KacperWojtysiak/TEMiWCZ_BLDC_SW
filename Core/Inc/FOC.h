@@ -21,6 +21,7 @@ extern "C" {
 void FOC_Init();
 void FOC_Clear(uint8_t bMotor);
 
+void FOC_HighFrequencyTask();
 
 #ifdef __cplusplus
 }

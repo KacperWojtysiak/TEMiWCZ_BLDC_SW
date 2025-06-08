@@ -59,4 +59,7 @@ void MC_Init(void){
   mc_lock_pins();
 }
 
-
+void MCI_FaultProcessing(MCI_Handle_t *pHandle, uint16_t hSetErrors, uint16_t hResetErrors){
+    pHandle->CurrentFaults = (pHandle->CurrentFaults | hSetErrors ) & (~hResetErrors);
+    pHandle->PastFaults |= hSetErrors;
+}

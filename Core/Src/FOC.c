@@ -19,16 +19,17 @@
 #include "open_loop.h"
 #include "ramp_ext_mngr.h"
 #include "pwm_curr_fdbk.h"
+#include "mc_math.h"
+#include "circle_limitation.h"
 
 /* --------------------------------- PRIVATE VARIABLES ---------------------------------*/
 OpenLoop_Handle_t *pOpenLoop[1] = {MC_NULL};   
 
 /* --------------------------------- PRIVATE FUNCTIONS ---------------------------------*/
-
+uint16_t FOC_CurrControllerM1();
 /* --------------------------------- PUBLIC FUNCTIONS ---------------------------------*/
 
-void FOC_Clear(uint8_t bMotor)
-{
+void FOC_Clear(uint8_t bMotor){
   MC_ControlMode_t mode;
 
   mode = Mci[bMotor].LastModalitySetByUser;
@@ -61,36 +62,112 @@ void FOC_Clear(uint8_t bMotor)
   PWMC_SwitchOffPWM(pwmcHandle[bMotor]);
 }
 
- void FOC_Init()
+void FOC_Init(){
+  pwmcHandle[M1] = &PWM_Handle_M1._Super;
+  R3_1_Init(&PWM_Handle_M1);
+  startTimers();
+  PID_HandleInit(&PIDSpeedHandle_M1);
+  STO_PLL_Init (&STO_PLL_M1);
+  STC_Init(pSTC[M1],&PIDSpeedHandle_M1, &STO_PLL_M1._Super);
+  RUC_Init(&RevUpControlM1, pSTC[M1], &VirtualSpeedSensorM1, &STO_M1, pwmcHandle[M1]);
+  PID_HandleInit(&PIDIqHandle_M1);
+  PID_HandleInit(&PIDIdHandle_M1);
+  pMPM[M1]->pVBS = &(BusVoltageSensor_M1._Super);
+  pMPM[M1]->pFOCVars = &FOCVars[M1];
+
+  OL_Init(&OpenLoop_ParamsM1, &VirtualSpeedSensorM1);
+  pOpenLoop[M1] = &OpenLoop_ParamsM1;
+
+  pREMNG[M1] = &RampExtMngrHFParamsM1;
+  REMNG_Init(pREMNG[M1]);
+
+  FOC_Clear(M1);
+  FOCVars[M1].bDriveInput = EXTERNAL;
+  FOCVars[M1].Iqdref = STC_GetDefaultIqdref(pSTC[M1]);
+  FOCVars[M1].UserIdref = STC_GetDefaultIqdref(pSTC[M1]).d;
+
+  //Setting the control mode
+  // MCI_SetSpeedMode(&Mci[M1]);
+  FOCVars[M1].bDriveInput = INTERNAL;
+  STC_SetControlMode(Mci[M1].pSTC, MCM_SPEED_MODE); //TODO
+  Mci[M1].LastModalitySetByUser = MCM_SPEED_MODE; //MCM_OPEN_LOOP_VOLTAGE_MODE
+
+  // MCI_ExecTorqueRamp(&Mci[M1], STC_GetDefaultIqdref(pSTC[M1]).q, 0);
+}
+
+void FOC_HighFrequencyTask(){
+  uint16_t hFOCreturn;
+  Observer_Inputs_t STO_Inputs;
+
+  STO_Inputs.Valfa_beta = FOCVars[M1].Valphabeta;
+  if (SWITCH_OVER == Mci[M1].State)
+  {
+    if (!REMNG_RampCompleted(pREMNG[M1]))
+    {
+      FOCVars[M1].Iqdref.q = (int16_t)REMNG_Calc(pREMNG[M1]);
+    }
+  }
+  hFOCreturn = FOC_CurrControllerM1();
+  if(hFOCreturn == MC_DURATION)
+  {
+    MCI_FaultProcessing(&Mci[M1], MC_DURATION, 0);
+  }
+  else
+  {
+    bool IsAccelerationStageReached = RUC_FirstAccelerationStageReached(&RevUpControlM1);
+    STO_Inputs.Ialfa_beta = FOCVars[M1].Ialphabeta;  
+    STO_Inputs.Vbus = VBS_GetAvBusVoltage_d(&(BusVoltageSensor_M1._Super));
+    (void)STO_PLL_CalcElAngle(&STO_PLL_M1, &STO_Inputs);
+    STO_PLL_CalcAvrgElSpeedDpp(&STO_PLL_M1);
+    if (false == IsAccelerationStageReached)
+    {
+      STO_ResetPLL(&STO_PLL_M1);
+    }
+    /* Only for sensor-less or open loop */
+    if((START == Mci[M1].State) || (SWITCH_OVER == Mci[M1].State) || (RUN == Mci[M1].State))
+    {
+      int16_t hObsAngle = SPD_GetElAngle(&STO_PLL_M1._Super);
+      (void)VSS_CalcElAngle(&VirtualSpeedSensorM1, &hObsAngle);
+    }
+  }
+}
+
+inline uint16_t FOC_CurrControllerM1()
 {
-    pwmcHandle[M1] = &PWM_Handle_M1._Super;
-    R3_1_Init(&PWM_Handle_M1);
-    startTimers();
-    PID_HandleInit(&PIDSpeedHandle_M1);
-    STO_PLL_Init (&STO_PLL_M1);
-    STC_Init(pSTC[M1],&PIDSpeedHandle_M1, &STO_PLL_M1._Super);
-    RUC_Init(&RevUpControlM1, pSTC[M1], &VirtualSpeedSensorM1, &STO_M1, pwmcHandle[M1]);
-    PID_HandleInit(&PIDIqHandle_M1);
-    PID_HandleInit(&PIDIdHandle_M1);
-    pMPM[M1]->pVBS = &(BusVoltageSensor_M1._Super);
-    pMPM[M1]->pFOCVars = &FOCVars[M1];
+  qd_t Iqd, Vqd;
+  ab_t Iab;
+  alphabeta_t Ialphabeta, Valphabeta;
+  int16_t hElAngle;
+  uint16_t hCodeError;
+  SpeednPosFdbk_Handle_t *speedHandle;
+  MC_ControlMode_t mode;
 
-    OL_Init(&OpenLoop_ParamsM1, &VirtualSpeedSensorM1);
-    pOpenLoop[M1] = &OpenLoop_ParamsM1;
+  mode = Mci[M1].LastModalitySetByUser;
+  speedHandle = STC_GetSpeedSensor(pSTC[M1]);
+  hElAngle = SPD_GetElAngle(speedHandle);
+  hElAngle += SPD_GetInstElSpeedDpp(speedHandle)*PARK_ANGLE_COMPENSATION_FACTOR;
+  PWMC_GetPhaseCurrents(pwmcHandle[M1], &Iab);
+  // RCM_ReadOngoingConv();
+  // RCM_ExecNextConv();
+  Ialphabeta = MCM_Clarke(Iab);
+  Iqd = MCM_Park(Ialphabeta, hElAngle);
+  Vqd.q = PI_Controller(pPIDIq[M1], (int32_t)(FOCVars[M1].Iqdref.q) - Iqd.q);
+  Vqd.d = PI_Controller(pPIDId[M1], (int32_t)(FOCVars[M1].Iqdref.d) - Iqd.d);
+  if (mode == MCM_OPEN_LOOP_VOLTAGE_MODE)
+  {
+    Vqd = OL_VqdConditioning(pOpenLoop[M1]);
+  }
+  Vqd = Circle_Limitation(&CircleLimitationM1, Vqd);
+  hElAngle += SPD_GetInstElSpeedDpp(speedHandle)*REV_PARK_ANGLE_COMPENSATION_FACTOR;
+  Valphabeta = MCM_Rev_Park(Vqd, hElAngle);
+  hCodeError = PWMC_SetPhaseVoltage(pwmcHandle[M1], Valphabeta);
 
-    pREMNG[M1] = &RampExtMngrHFParamsM1;
-    REMNG_Init(pREMNG[M1]);
+  FOCVars[M1].Vqd = Vqd;
+  FOCVars[M1].Iab = Iab;
+  FOCVars[M1].Ialphabeta = Ialphabeta;
+  FOCVars[M1].Iqd = Iqd;
+  FOCVars[M1].Valphabeta = Valphabeta;
+  FOCVars[M1].hElAngle = hElAngle;
 
-    FOC_Clear(M1);
-    FOCVars[M1].bDriveInput = EXTERNAL;
-    FOCVars[M1].Iqdref = STC_GetDefaultIqdref(pSTC[M1]);
-    FOCVars[M1].UserIdref = STC_GetDefaultIqdref(pSTC[M1]).d;
-
-    //Setting the control mode
-    // MCI_SetSpeedMode(&Mci[M1]);
-    FOCVars[M1].bDriveInput = INTERNAL;
-    STC_SetControlMode(Mci[M1].pSTC, MCM_SPEED_MODE); //TODO
-    Mci[M1].LastModalitySetByUser = MCM_SPEED_MODE; //MCM_OPEN_LOOP_VOLTAGE_MODE
-
-    // MCI_ExecTorqueRamp(&Mci[M1], STC_GetDefaultIqdref(pSTC[M1]).q, 0);
+  return (hCodeError);
 }

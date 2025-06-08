@@ -90,6 +90,7 @@ typedef struct
 
 /* --------------------------------- PUBLIC FUNCTIONS ---------------------------------*/
 void MC_Init(void);
+void MCI_FaultProcessing(MCI_Handle_t *pHandle, uint16_t hSetErrors, uint16_t hResetErrors);
 
 #ifdef __cplusplus
 }
