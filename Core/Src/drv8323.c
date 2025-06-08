@@ -33,13 +33,13 @@ uint16_t DRV8323regOcpCtrl =
   1 << 8  | //DEAD_TIME
   1 << 6  | //OCP_MODE
   2 << 4  | //OCP_DEG
-  0;        //VDS_LVL			
+  2;        //VDS_LVL			
 
 uint16_t DRV8323regCsaCtrl =
   1 << 10 | //CSA_FET
   0 << 9  | //VREF_DIV
   0 << 8  | //LS_REF
-  0 << 6  | //CSA_GAIN // 2 -> 20-V/V // 1 -> 10-V/V
+  1 << 6  | //CSA_GAIN // 2 -> 20-V/V // 1 -> 10-V/V
   0 << 5  | //DIS_SEN
   0 << 4  | //CSA_CAL_A
   0 << 3  | //CCSA_CAL_B
@@ -108,4 +108,33 @@ void DRV8323_setupSpi()
     temp = DRV8323_readSpi(ADR_OCP_CTRL);
     temp = DRV8323_readSpi(ADR_CSA_CTRL);
 	return;
+}
+
+
+void DRV8323_calibrateCSA()
+{
+    uint16_t csaReg = DRV8323_readSpi(ADR_CSA_CTRL);
+
+    //(CSA_CAL_A, CSA_CAL_B, CSA_CAL_C) -> 1
+    csaReg |= (1 << 4) | (1 << 3) | (1 << 2);
+    DRV8323_writeSpi(ADR_CSA_CTRL, csaReg);
+    HAL_Delay(10);
+
+    csaReg &= ~((1 << 4) | (1 << 3) | (1 << 2));
+    DRV8323_writeSpi(ADR_CSA_CTRL, csaReg);
+    HAL_Delay(10);
+}
+
+void DRV8323_Check(){
+  uint16_t error, vgs, ctrl, hs, ls, ocp, csa  = 0;
+
+  error = DRV8323_readSpi(ADR_FAULT_STAT);
+  vgs = DRV8323_readSpi(ADR_VGS_STAT);
+  ctrl = DRV8323_readSpi(ADR_DRV_CTRL);
+  hs = DRV8323_readSpi(ADR_GATE_DRV_HS);
+  ls = DRV8323_readSpi(ADR_GATE_DRV_LS);
+  // DRV8323_writeSpi(ADR_OCP_CTRL, 1881); // write to DRV_CTRL register to disable the driver
+  ocp = DRV8323_readSpi(ADR_OCP_CTRL);
+  csa = DRV8323_readSpi(ADR_CSA_CTRL);
+  printf("%d, %d, %d, %d, %d, %d, %d", error, vgs, ctrl, hs, ls, ocp, csa);
 }

@@ -7,6 +7,7 @@
 #include "stdbool.h"
 #include "stdint.h"
 #include "stm32g4xx_hal.h"
+#include "stdio.h"
 
 #define ADR_FAULT_STAT      (0x00)
 #define ADR_VGS_STAT        (0x01)
@@ -19,6 +20,8 @@
 uint16_t DRV8323_readSpi(uint8_t regAdr);
 void DRV8323_writeSpi(uint8_t regAdr, uint16_t regVal);
 void DRV8323_setupSpi();
+void DRV8323_calibrateCSA();
+void DRV8323_Check();
 
 #ifdef __cplusplus
 }
