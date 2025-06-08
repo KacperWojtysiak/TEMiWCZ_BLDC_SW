@@ -56,7 +56,7 @@ static void R3_1_ADCxInit(ADC_TypeDef *ADCx);
 __STATIC_INLINE uint16_t R3_1_WriteTIMRegisters(PWMC_Handle_t *pHdl, uint16_t hCCR4Reg);
 static void R3_1_HFCurrentsPolarizationAB(PWMC_Handle_t *pHdl, ab_t *Iab);
 static void R3_1_HFCurrentsPolarizationC(PWMC_Handle_t *pHdl, ab_t *Iab);
-static void R3_1_SetAOReferenceVoltage(uint32_t DAC_Channel, DAC_TypeDef *DACx, uint16_t hDACVref);
+// static void R3_1_SetAOReferenceVoltage(uint32_t DAC_Channel, DAC_TypeDef *DACx, uint16_t hDACVref);
 static void R3_1_RLGetPhaseCurrents(PWMC_Handle_t *pHdl, ab_t *pStator_Currents);
 static void R3_1_RLTurnOnLowSides(PWMC_Handle_t *pHdl, uint32_t ticks);
 static void R3_1_RLSwitchOnPWM( PWMC_Handle_t *pHdl);
@@ -113,9 +113,9 @@ __weak void R3_1_Init(PWMC_R3_1_Handle_t *pHandle)
       if (OPAMPParams != NULL)
       {
         /* Enable OpAmp defined in OPAMPSelect_X table */
-        LL_OPAMP_Enable(OPAMPParams->OPAMPSelect_1[0]);
-        LL_OPAMP_Enable(OPAMPParams->OPAMPSelect_1[1]);
-        LL_OPAMP_Enable(OPAMPParams->OPAMPSelect_2[0]);
+        // LL_OPAMP_Enable(OPAMPParams->OPAMPSelect_1[0]);
+        // LL_OPAMP_Enable(OPAMPParams->OPAMPSelect_1[1]);
+        // LL_OPAMP_Enable(OPAMPParams->OPAMPSelect_2[0]);
       }
       else
       {
@@ -127,8 +127,8 @@ __weak void R3_1_Init(PWMC_R3_1_Handle_t *pHandle)
         /* Inverting input*/
         if ((pHandle->pParams_str->CompOCPAInvInput_MODE != EXT_MODE) && (DAC_OCPAx != MC_NULL))
         {
-          R3_1_SetAOReferenceVoltage(pHandle->pParams_str->DAC_Channel_OCPA, DAC_OCPAx,
-                                     (uint16_t)(pHandle->pParams_str->DAC_OCP_Threshold));
+          // R3_1_SetAOReferenceVoltage(pHandle->pParams_str->DAC_Channel_OCPA, DAC_OCPAx,
+          //                            (uint16_t)(pHandle->pParams_str->DAC_OCP_Threshold));
         }
         /* Output */
         LL_COMP_Enable(COMP_OCPAx);
@@ -144,8 +144,8 @@ __weak void R3_1_Init(PWMC_R3_1_Handle_t *pHandle)
       {
         if ((pHandle->pParams_str->CompOCPBInvInput_MODE != EXT_MODE) && (DAC_OCPBx != MC_NULL))
         {
-          R3_1_SetAOReferenceVoltage(pHandle->pParams_str->DAC_Channel_OCPB, DAC_OCPBx,
-                                     (uint16_t)(pHandle->pParams_str->DAC_OCP_Threshold));
+          // R3_1_SetAOReferenceVoltage(pHandle->pParams_str->DAC_Channel_OCPB, DAC_OCPBx,
+          //                            (uint16_t)(pHandle->pParams_str->DAC_OCP_Threshold));
         }
         LL_COMP_Enable(COMP_OCPBx);
         LL_COMP_Lock(COMP_OCPBx);
@@ -160,8 +160,8 @@ __weak void R3_1_Init(PWMC_R3_1_Handle_t *pHandle)
       {
         if ((pHandle->pParams_str->CompOCPCInvInput_MODE != EXT_MODE)  && (DAC_OCPCx != MC_NULL))
         {
-          R3_1_SetAOReferenceVoltage(pHandle->pParams_str->DAC_Channel_OCPC, DAC_OCPCx,
-                                     (uint16_t)(pHandle->pParams_str->DAC_OCP_Threshold));
+          // R3_1_SetAOReferenceVoltage(pHandle->pParams_str->DAC_Channel_OCPC, DAC_OCPCx,
+          //                            (uint16_t)(pHandle->pParams_str->DAC_OCP_Threshold));
         }
         LL_COMP_Enable(COMP_OCPCx);
         LL_COMP_Lock(COMP_OCPCx);
@@ -177,8 +177,8 @@ __weak void R3_1_Init(PWMC_R3_1_Handle_t *pHandle)
         /* Inverting input*/
         if ((pHandle->pParams_str->CompOVPInvInput_MODE != EXT_MODE) && (DAC_OVPx != MC_NULL))
         {
-          R3_1_SetAOReferenceVoltage(pHandle->pParams_str->DAC_Channel_OVP, DAC_OVPx,
-                                     (uint16_t)(pHandle->pParams_str->DAC_OVP_Threshold));
+          // R3_1_SetAOReferenceVoltage(pHandle->pParams_str->DAC_Channel_OVP, DAC_OVPx,
+          //                            (uint16_t)(pHandle->pParams_str->DAC_OVP_Threshold));
         }
         /* Output */
         LL_COMP_Enable(COMP_OVPx);
@@ -1627,34 +1627,34 @@ __weak void *R3_1_TIMx_UP_IRQHandler(PWMC_R3_1_Handle_t *pHandle)
   * @param  hDACVref: Value of DAC reference expressed as 16bit unsigned integer.
   *         Ex. 0 = 0V 65536 = VDD_DAC.
   */
-static void R3_1_SetAOReferenceVoltage(uint32_t DAC_Channel, DAC_TypeDef *DACx, uint16_t hDACVref)
-{
-  LL_DAC_ConvertData12LeftAligned(DACx, DAC_Channel, hDACVref);
+// static void R3_1_SetAOReferenceVoltage(uint32_t DAC_Channel, DAC_TypeDef *DACx, uint16_t hDACVref)
+// {
+//   LL_DAC_ConvertData12LeftAligned(DACx, DAC_Channel, hDACVref);
 
-  /* Enable DAC Channel */
-  LL_DAC_TrigSWConversion(DACx, DAC_Channel);
+//   /* Enable DAC Channel */
+//   LL_DAC_TrigSWConversion(DACx, DAC_Channel);
 
-  if (1U == LL_DAC_IsEnabled(DACx, DAC_Channel))
-  {
-    /* If DAC is already enable, we wait LL_DAC_DELAY_VOLTAGE_SETTLING_US*/
-    volatile uint32_t wait_loop_index = ((LL_DAC_DELAY_VOLTAGE_SETTLING_US) * (SystemCoreClock / (1000000UL * 2UL)));
-    while (wait_loop_index != 0UL)
-    {
-      wait_loop_index--;
-    }
-  }
-  else
-  {
-    /* If DAC is not enabled, we must wait LL_DAC_DELAY_STARTUP_VOLTAGE_SETTLING_US*/
-    LL_DAC_Enable(DACx, DAC_Channel);
-    volatile uint32_t wait_loop_index = ((LL_DAC_DELAY_STARTUP_VOLTAGE_SETTLING_US)
-                                         * (SystemCoreClock / (1000000UL * 2UL)));
-    while (wait_loop_index != 0UL)
-    {
-      wait_loop_index--;
-    }
-  }
-}
+//   if (1U == LL_DAC_IsEnabled(DACx, DAC_Channel))
+//   {
+//     /* If DAC is already enable, we wait LL_DAC_DELAY_VOLTAGE_SETTLING_US*/
+//     volatile uint32_t wait_loop_index = ((LL_DAC_DELAY_VOLTAGE_SETTLING_US) * (SystemCoreClock / (1000000UL * 2UL)));
+//     while (wait_loop_index != 0UL)
+//     {
+//       wait_loop_index--;
+//     }
+//   }
+//   else
+//   {
+//     /* If DAC is not enabled, we must wait LL_DAC_DELAY_STARTUP_VOLTAGE_SETTLING_US*/
+//     LL_DAC_Enable(DACx, DAC_Channel);
+//     volatile uint32_t wait_loop_index = ((LL_DAC_DELAY_STARTUP_VOLTAGE_SETTLING_US)
+//                                          * (SystemCoreClock / (1000000UL * 2UL)));
+//     while (wait_loop_index != 0UL)
+//     {
+//       wait_loop_index--;
+//     }
+//   }
+// }
 
 /*
   * @brief  Sets the PWM mode for R/L detection.

@@ -25,7 +25,7 @@
 #include "main.h" //cstat !MISRAC2012-Rule-21.1
 //cstat +MISRAC2012-Rule-21.1
 #include "parameters_conversion.h"
-// #include "r3_g4xx_pwm_curr_fdbk.h"
+#include "r3_1_g4xx_pwm_curr_fdbk.h"
 
 /* USER CODE BEGIN Additional include */
 
@@ -35,22 +35,51 @@
 #define FREQ_RELATION HIGHEST_FREQ  /* Dummy value for single drive */
 
 /**
-  * @brief  Current sensor parameters Motor 1 - three shunt - G4 HSO
+  * @brief  Current sensor parameters Motor 1 - three shunt - G4
   */
-const R3_Params_t R3_ParamsM1 =
+const R3_1_Params_t R3_1_ParamsM1 =
 {
+/* Dual MC parameters --------------------------------------------------------*/
+  .FreqRatio       = FREQ_RATIO,
+  .IsHigherFreqTim = FREQ_RELATION,
 
 /* Current reading A/D Conversions initialization -----------------------------*/
-  .ADCx_1           = ADC3,
-  .ADCx_2           = ADC4,
-  .ADCx_3           = ADC5,
-  /* PWM generation parameters --------------------------------------------------*/
+  .ADCx            = ADC2,
+
+  .ADCConfig = {
+                 (7U << ADC_JSQR_JSQ1_Pos)
+               | (6U << ADC_JSQR_JSQ2_Pos) | 1<< ADC_JSQR_JL_Pos
+               | (LL_ADC_INJ_TRIG_EXT_TIM1_TRGO & ~ADC_INJ_TRIG_EXT_EDGE_DEFAULT)
+                ,(1U << ADC_JSQR_JSQ1_Pos)
+               | (6U << ADC_JSQR_JSQ2_Pos) | 1<< ADC_JSQR_JL_Pos
+               | (LL_ADC_INJ_TRIG_EXT_TIM1_TRGO & ~ADC_INJ_TRIG_EXT_EDGE_DEFAULT)
+                ,(1U << ADC_JSQR_JSQ1_Pos)
+               | (6U << ADC_JSQR_JSQ2_Pos) | 1<< ADC_JSQR_JL_Pos
+               | (LL_ADC_INJ_TRIG_EXT_TIM1_TRGO & ~ADC_INJ_TRIG_EXT_EDGE_DEFAULT)
+                ,(1U << ADC_JSQR_JSQ1_Pos)
+               | (7U << ADC_JSQR_JSQ2_Pos) | 1<< ADC_JSQR_JL_Pos
+               | (LL_ADC_INJ_TRIG_EXT_TIM1_TRGO & ~ADC_INJ_TRIG_EXT_EDGE_DEFAULT)
+                ,(1U << ADC_JSQR_JSQ1_Pos)
+               | (7U << ADC_JSQR_JSQ2_Pos) | 1<< ADC_JSQR_JL_Pos
+               | (LL_ADC_INJ_TRIG_EXT_TIM1_TRGO & ~ADC_INJ_TRIG_EXT_EDGE_DEFAULT)
+                ,(7U << ADC_JSQR_JSQ1_Pos)
+               | (6U << ADC_JSQR_JSQ2_Pos) | 1<< ADC_JSQR_JL_Pos
+               | (LL_ADC_INJ_TRIG_EXT_TIM1_TRGO & ~ADC_INJ_TRIG_EXT_EDGE_DEFAULT)
+               },
+
+/* PWM generation parameters --------------------------------------------------*/
   .RepetitionCounter = REP_COUNTER,
-  .TIMx              = TIM8,
-  .TIMx_Oversample   = TIM3,
+  .Tafter            = TW_AFTER,
+  .Tbefore           = TW_BEFORE_R3_1,
+  .Tsampling         = (uint16_t)SAMPLING_TIME,
+  .Tcase2            = (uint16_t)SAMPLING_TIME + (uint16_t)TDEAD + (uint16_t)TRISE,
+  .Tcase3            = ((uint16_t)TDEAD + (uint16_t)TNOISE + (uint16_t)SAMPLING_TIME)/2u,
+  .TIMx               = TIM1,
+
 /* Internal OPAMP common settings --------------------------------------------*/
   .OPAMPParams     = MC_NULL,
 /* Internal COMP settings ----------------------------------------------------*/
+
   .CompOCPASelection     = MC_NULL,
   .CompOCPAInvInput_MODE = NONE,
   .CompOCPBSelection     = MC_NULL,
@@ -60,87 +89,27 @@ const R3_Params_t R3_ParamsM1 =
   .DAC_OCP_ASelection    = MC_NULL,
   .DAC_OCP_BSelection    = MC_NULL,
   .DAC_OCP_CSelection    = MC_NULL,
-  .DAC_Channel_OCPA      = (uint32_t)0,
-  .DAC_Channel_OCPB      = (uint32_t)0,
-  .DAC_Channel_OCPC      = (uint32_t)0,
+  .DAC_Channel_OCPA      = (uint32_t) 0,
+  .DAC_Channel_OCPB      = (uint32_t) 0,
+  .DAC_Channel_OCPC      = (uint32_t) 0,
+
   .CompOVPSelection      = MC_NULL,
   .CompOVPInvInput_MODE  = NONE,
   .DAC_OVP_Selection     = MC_NULL,
-  .DAC_Channel_OVP       = (uint32_t)0,
+  .DAC_Channel_OVP       = (uint32_t) 0,
+
 /* DAC settings --------------------------------------------------------------*/
-  .DAC_OCP_Threshold     = 0,
-  .DAC_OVP_Threshold     = 23830,
-          .DMA_ADCx_1 = DMA2_Channel1,
-  .DMA_ADCx_2 = DMA2_Channel2,
-  .DMA_ADCx_3 = DMA2_Channel3,
+  .DAC_OCP_Threshold =  0,
+  .DAC_OVP_Threshold =  23830,
+
 };
 
-const FLASH_Params_t  flashParams =
+ScaleParams_t scaleParams_M1 =
 {
-  .motor = {
-    .polePairs = POLE_PAIR_NUM,
-    .ratedFlux = MOTOR_RATED_FLUX,
-    .rs = RS,
-    .rsSkinFactor = MOTOR_RS_SKINFACTOR,
-    .ls = LS,
-    .maxCurrent = NOMINAL_CURRENT_A,
-    .mass_copper_kg = MOTOR_MASS_COPPER_KG,
-    .cooling_tau_s = MOTOR_COOLINGTAU_S,
-    .name = MOTOR_NAME,
-  },
-  .polPulse =
-  {
-    .N  = NB_PULSE_PERIODS,
-    .Nd = NB_DECAY_PERIODS,
-    .PulseCurrentGoal = PULSE_CURRENT_GOAL,
-  },
-  .zest =
-  {
-    .zestThresholdFreqHz = 0,
-    .zestInjectFreq = 0,
-    .zestInjectD = 0,
-    .zestGainD = 0,
-    .zestGainQ = 0,
-  },
-  .PIDSpeed =
-  {
-    .pidSpdKp = PID_SPD_KP,
-    .pidSpdKi = PID_SPD_KI,
-  },
-  .board =
-  {
-   .limitOverVoltage = BOARD_LIMIT_OVERVOLTAGE,
-   .limitRegenHigh = BOARD_LIMIT_REGEN_HIGH,
-   .limitRegenLow = BOARD_LIMIT_REGEN_LOW,
-   .limitAccelHigh = BOARD_LIMIT_ACCEL_HIGH,
-   .limitAccelLow = BOARD_LIMIT_ACCEL_LOW,
-   .limitUnderVoltage = BOARD_LIMIT_UNDERVOLTAGE,
-   .maxModulationIndex = BOARD_MAX_MODULATION,
-   .softOverCurrentTrip = BOARD_SOFT_OVERCURRENT_TRIP,
-},
-  .KSampleDelay = KSAMPLE_DELAY,
-  .throttle =
-  {
-    .offset = THROTTLE_OFFSET, /*TODO: Tobe defined */
-	  .gain = THROTTLE_GAIN, /*TODO: Tobe defined */
-	  .speedMaxRPM = THROTTLE_SPEED_MAX_RPM,
-    .direction = 1,
-  },
-  .scale =
-  {
-    .voltage = VOLTAGE_SCALE,
-    .current = CURRENT_SCALE,
-    .frequency = FREQUENCY_SCALE
-  },
+ .voltage = NOMINAL_BUS_VOLTAGE_V/(1.73205 * 32767), /* sqrt(3) = 1.73205 */
+ .current = CURRENT_CONV_FACTOR_INV,
+ .frequency = (1.15 * MAX_APPLICATION_SPEED_UNIT * U_RPM)/(32768* SPEED_UNIT)
 };
-
-const MotorConfig_reg_t *motorParams = &flashParams.motor;
-const zestFlashParams_t *zestParams = &flashParams.zest;
-const boardFlashParams_t *boardParams = &flashParams.board;
-const scaleFlashParams_t *scaleParams = &flashParams.scale;
-const throttleParams_t *throttleParams = &flashParams.throttle;
-const float *KSampleDelayParams = &flashParams.KSampleDelay;
-const PIDSpeedFlashParams_t *PIDSpeedParams = &flashParams.PIDSpeed;
 
 /* USER CODE BEGIN Additional parameters */
 

@@ -126,7 +126,7 @@ int main(void)
   TIM_StartTIM1();
 
   // MCI_SetOpenLoopVoltageMode(&Mci[M1]);
-  // int16_t voltage = 100;
+  // int16_t voltage = 50;
   // OL_UpdateVoltage(&OpenLoop_ParamsM1, ((voltage * 32767) / 100));
   // int32_t rpm = 500; // przykładowa wartość prędkości obrotowej w RPM
   // MC_ProgramSpeedRampMotor1((int16_t)((rpm * SPEED_UNIT) / U_RPM), 1000);

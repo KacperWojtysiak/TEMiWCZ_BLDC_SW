@@ -50,6 +50,9 @@ typedef float           float_t;
 
 /** @name Macros to use bit banding capability */
 /** @{ */
+#define LL_DAC_DELAY_STARTUP_VOLTAGE_SETTLING_US             8UL  /*!< Delay for DAC channel voltage settling time from DAC channel startup (transition from disable to enable) */
+#define LL_DAC_DELAY_VOLTAGE_SETTLING_US                     3UL /*!< Delay for DAC channel voltage settling time */
+
 #define BB_REG_BIT_SET(regAddr,bit_number) *(uint32_t *) (0x42000000+(((uint32_t)regAddr - 0x40000000 )<<5)\
                                            + (bit_number <<2)) = (uint32_t)(0x1u)
 #define BB_REG_BIT_CLR(regAddr,bit_number) (*(uint32_t *) (0x42000000+(((uint32_t)regAddr - 0x40000000)<<5)\

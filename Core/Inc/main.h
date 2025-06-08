@@ -40,6 +40,7 @@ extern "C" {
 #include "TIM.h"
 #include "Scheduler.h"
 #include "MC.h"
+#include "parameters_conversion.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -49,7 +50,6 @@ extern "C" {
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
-#define SYS_TICK_FREQUENCY 2000
 #define SYSTICK_DIVIDER (SYS_TICK_FREQUENCY/1000)
 
 /* USER CODE END EC */

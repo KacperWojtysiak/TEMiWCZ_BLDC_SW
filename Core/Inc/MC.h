@@ -66,14 +66,14 @@ typedef enum
 
 typedef struct
 {
-//   SpeednTorqCtrl_Handle_t *pSTC;         /*!< Speed and torque controller object used by MCI.*/
-//   pFOCVars_t pFOCVars;                   /*!< Pointer to FOC vars used by MCI.*/
-//   PWMC_Handle_t *pPWM;                   /*!< Pointer to PWM handle structure.*/
-//   VirtualSpeedSensor_Handle_t *pVSS;
+    // SpeednTorqCtrl_Handle_t *pSTC;         /*!< Speed and torque controller object used by MCI.*/
+    pFOCVars_t pFOCVars;                   /*!< Pointer to FOC vars used by MCI.*/
+    // PWMC_Handle_t *pPWM;                   /*!< Pointer to PWM handle structure.*/
+    // VirtualSpeedSensor_Handle_t *pVSS;
     MCI_UserCommands_t lastCommand;        /*!< Last command coming from the user.*/
     int16_t hFinalSpeed;                   /*!< Final speed of last ExecSpeedRamp command.*/
     int16_t hFinalTorque;                  /*!< Final torque of last ExecTorqueRamp command.*/
-//   qd_t Iqdref;                           /*!< Current component of last SetCurrentReferences command.*/
+    qd_t Iqdref;                           /*!< Current component of last SetCurrentReferences command.*/
     ScaleParams_t *pScale;
     uint16_t hDurationms;                  /*!< Duration in ms of last ExecSpeedRamp or ExecTorqueRamp command.*/
     MCI_DirectCommands_t DirectCommand;

@@ -8,27 +8,13 @@
 
 /* ------------------------------------- INCLUDES -------------------------------------*/
 #include "MC.h"
+#include "mc_type.h"
+#include "mc_config.h"
+
+#include "FOC.h"
 
 /* --------------------------------- PRIVATE VARIABLES ---------------------------------*/
 static volatile uint8_t bMCBootCompleted = ((uint8_t)0);
-
-MCI_Handle_t mc =
-{
-    // .pSTC = &SpeednTorqCtrlM1,
-    // .pFOCVars = &FOCVars[0],
-    // .pVSS = &VirtualSpeedSensorM1,
-    // .pPWM = &PWM_Handle_M1._Super,
-    .lastCommand = MCI_NOCOMMANDSYET,
-    .hFinalSpeed = 0,
-    .hFinalTorque = 0,
-    // .pScale = &scaleParams_M1,
-    .hDurationms = 0,
-    .DirectCommand = MCI_NO_COMMAND,
-    .State = IDLE,
-    .CurrentFaults = MC_NO_FAULTS,
-    .PastFaults = MC_NO_FAULTS,
-    .CommandState = MCI_BUFFER_EMPTY,
-};
 
 /* --------------------------------- PRIVATE FUNCTIONS ---------------------------------*/
 void mc_lock_pins (void)
@@ -53,17 +39,7 @@ __weak void MCboot( MCI_Handle_t* pMC)
   else
   {
     bMCBootCompleted = (uint8_t )0;
-
-    /*************************************************/
-    /*    FOC initialization         */
-    /*************************************************/
-    // pMC[M1] = &Mci[M1];
-    // FOC_Init();
-
-    // ASPEP_start(&aspepOverUartA);
-    /* USER CODE BEGIN MCboot 1 */
-
-    /* USER CODE END MCboot 1 */
+    FOC_Init();
 
     /******************************************************/
     /*   PID component initialization: speed regulation   */
@@ -80,18 +56,6 @@ __weak void MCboot( MCI_Handle_t* pMC)
     /**********************************************************/
     // VVBS_Init(&BusVoltageSensor_M1);
 
-    /*******************************************************/
-    /*   Temperature measurement component initialization  */
-    /*******************************************************/
-    // NTC_Init(&TempSensor_M1);
-
-    /* Applicative hook in MCBoot() */
-    // MC_APP_BootHook();
-
-    /* USER CODE BEGIN MCboot 2 */
-
-    /* USER CODE END MCboot 2 */
-
     bMCBootCompleted = 1U;
   }
 }
@@ -103,7 +67,7 @@ void MC_Init(void){
   HAL_NVIC_SetPriority(SysTick_IRQn, uwTickPrio, 0U);
 
 /* Initialize the Motor Control Subsystem */
-  MCboot(&mc);
+  MCboot(&Mci[M1]);
   mc_lock_pins();
 }
 

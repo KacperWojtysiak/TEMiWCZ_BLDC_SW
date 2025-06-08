@@ -42,9 +42,16 @@ add_subdirectory(cmake/stm32cubemx)
 
 # Drivers Midllewares
 set(MotorControl_Src
-    ${CMAKE_SOURCE_DIR}/MCSDK/MCLib/G4xx/Src/g4xx_bemf_ADC_fdbk.c
-    ${CMAKE_SOURCE_DIR}/MCSDK/MCLib/Any/Src/speed_pos_fdbk.c
-    ${CMAKE_SOURCE_DIR}/MCSDK/MCLib/Any/Src/pwmc_sixstep.c
+    ${CMAKE_SOURCE_DIR}/MCSDK/MCLib/Any/Src/pid_regulator.c
+    ${CMAKE_SOURCE_DIR}/MCSDK/MCLib/Any/Src/sto_pll_speed_pos_fdbk.c
+    ${CMAKE_SOURCE_DIR}/MCSDK/MCLib/Any/Src/speed_torq_ctrl.c
+    ${CMAKE_SOURCE_DIR}/MCSDK/MCLib/Any/Src/revup_ctrl.c
+    ${CMAKE_SOURCE_DIR}/MCSDK/MCLib/Any/Src/pid_regulator.c
+    ${CMAKE_SOURCE_DIR}/MCSDK/MCLib/Any/Src/open_loop.c
+    ${CMAKE_SOURCE_DIR}/MCSDK/MCLib/Any/Src/ramp_ext_mngr.c
+
+    ${CMAKE_SOURCE_DIR}/MCSDK/MCLib/G4xx/Src/r3_1_g4xx_pwm_curr_fdbk.c
+
 )
 
 # Link directories setup
@@ -62,6 +69,13 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     ${CMAKE_SOURCE_DIR}/Core/Src/drv8323.c
     ${CMAKE_SOURCE_DIR}/Core/Src/Scheduler.c
     ${CMAKE_SOURCE_DIR}/Core/Src/MC.c
+    ${CMAKE_SOURCE_DIR}/Core/Src/mc_config.c
+    ${CMAKE_SOURCE_DIR}/Core/Src/mc_config_common.c
+    ${CMAKE_SOURCE_DIR}/Core/Src/mc_configuration_registers.c
+    ${CMAKE_SOURCE_DIR}/Core/Src/mc_parameters.c
+    ${CMAKE_SOURCE_DIR}/Core/Src/pwm_common.c
+    ${CMAKE_SOURCE_DIR}/Core/Src/pwm_curr_fdbk.c
+    ${CMAKE_SOURCE_DIR}/Core/Src/FOC.c
 )
 
 # Link directories setup

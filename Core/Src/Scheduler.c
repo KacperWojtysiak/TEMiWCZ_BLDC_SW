@@ -9,6 +9,17 @@
 /* ------------------------------------- INCLUDES -------------------------------------*/
 #include "Scheduler.h"
 
+#include "mc_config.h"
+#include "mc_config_common.h"
+#include "pwm_common.h"
+#include "sto_pll_speed_pos_fdbk.h"
+#include "speed_torq_ctrl.h"
+#include "revup_ctrl.h"
+#include "pid_regulator.h"
+#include "open_loop.h"
+#include "ramp_ext_mngr.h"
+#include "pwm_curr_fdbk.h"
+
 /* --------------------------------- PRIVATE VARIABLES ---------------------------------*/
 volatile uint16_t tick = 1;
 
@@ -20,7 +31,7 @@ void Task1ms(){
 }
 
 void Task10ms(){
-    HAL_GPIO_TogglePin(LED_1_GPIO_Port, LED_1_Pin);
+    // HAL_GPIO_TogglePin(LED_1_GPIO_Port, LED_1_Pin);
 }
 
 void Task100ms(){
