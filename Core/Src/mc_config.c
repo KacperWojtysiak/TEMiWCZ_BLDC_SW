@@ -312,10 +312,10 @@ PQD_MotorPowMeas_Handle_t *pMPM[NBR_OF_MOTORS]  = {&PQD_MotorPowMeasM1};
 MCI_Handle_t Mci[NBR_OF_MOTORS] =
 {
   {
-    // .pSTC = &SpeednTorqCtrlM1,
+    .pSTC = &SpeednTorqCtrlM1,
     .pFOCVars = &FOCVars[0],
-    // .pVSS = &VirtualSpeedSensorM1,
-    // .pPWM = &PWM_Handle_M1._Super,
+    .pVSS = &VirtualSpeedSensorM1,
+    .pPWM = &PWM_Handle_M1._Super,
     .lastCommand = MCI_NOCOMMANDSYET,
     .hFinalSpeed = 0,
     .hFinalTorque = 0,

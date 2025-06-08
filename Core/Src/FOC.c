@@ -9,6 +9,17 @@
 /* ------------------------------------- INCLUDES -------------------------------------*/
 #include "FOC.h"
 
+#include "mc_config.h"
+#include "mc_config_common.h"
+#include "pwm_common.h"
+#include "sto_pll_speed_pos_fdbk.h"
+#include "speed_torq_ctrl.h"
+#include "revup_ctrl.h"
+#include "pid_regulator.h"
+#include "open_loop.h"
+#include "ramp_ext_mngr.h"
+#include "pwm_curr_fdbk.h"
+
 /* --------------------------------- PRIVATE VARIABLES ---------------------------------*/
 OpenLoop_Handle_t *pOpenLoop[1] = {MC_NULL};   
 
@@ -78,7 +89,7 @@ void FOC_Clear(uint8_t bMotor)
     //Setting the control mode
     // MCI_SetSpeedMode(&Mci[M1]);
     FOCVars[M1].bDriveInput = INTERNAL;
-    // STC_SetControlMode(Mci[M1].pSTC, MCM_SPEED_MODE); //TODO
+    STC_SetControlMode(Mci[M1].pSTC, MCM_SPEED_MODE); //TODO
     Mci[M1].LastModalitySetByUser = MCM_SPEED_MODE; //MCM_OPEN_LOOP_VOLTAGE_MODE
 
     // MCI_ExecTorqueRamp(&Mci[M1], STC_GetDefaultIqdref(pSTC[M1]).q, 0);

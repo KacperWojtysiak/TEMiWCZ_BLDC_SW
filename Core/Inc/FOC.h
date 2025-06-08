@@ -13,16 +13,7 @@ extern "C" {
 #endif
 
 /* ------------------------------------- INCLUDES -------------------------------------*/
-#include "mc_config.h"
-#include "mc_config_common.h"
-#include "pwm_common.h"
-#include "sto_pll_speed_pos_fdbk.h"
-#include "speed_torq_ctrl.h"
-#include "revup_ctrl.h"
-#include "pid_regulator.h"
-#include "open_loop.h"
-#include "ramp_ext_mngr.h"
-#include "pwm_curr_fdbk.h"
+#include "main.h"
 
 /* --------------------------------- PUBLIC VARIABLES ---------------------------------*/
 

@@ -14,20 +14,20 @@
 #include "FOC.h"
 
 /* --------------------------------- PRIVATE VARIABLES ---------------------------------*/
-static volatile uint8_t bMCBootCompleted = ((uint8_t)0);
+static volatile uint8_t bMCBootCompleted = 0;
 
 /* --------------------------------- PRIVATE FUNCTIONS ---------------------------------*/
 void mc_lock_pins (void)
 {
-LL_GPIO_LockPin(SENS_I_A_GPIO_Port, SENS_I_A_Pin);
-LL_GPIO_LockPin(SENS_I_B_GPIO_Port, SENS_I_B_Pin);
-LL_GPIO_LockPin(SENS_I_C_GPIO_Port, SENS_I_C_Pin);
-LL_GPIO_LockPin(M1_PWM_UH_GPIO_Port, M1_PWM_UH_Pin);
-LL_GPIO_LockPin(M1_PWM_VH_GPIO_Port, M1_PWM_VH_Pin);
-LL_GPIO_LockPin(M1_PWM_VL_GPIO_Port, M1_PWM_VL_Pin);
-LL_GPIO_LockPin(M1_PWM_WH_GPIO_Port, M1_PWM_WH_Pin);
-LL_GPIO_LockPin(M1_PWM_WL_GPIO_Port, M1_PWM_WL_Pin);
-LL_GPIO_LockPin(M1_PWM_UL_GPIO_Port, M1_PWM_UL_Pin);
+    LL_GPIO_LockPin(SENS_I_A_GPIO_Port, SENS_I_A_Pin);
+    LL_GPIO_LockPin(SENS_I_B_GPIO_Port, SENS_I_B_Pin);
+    LL_GPIO_LockPin(SENS_I_C_GPIO_Port, SENS_I_C_Pin);
+    LL_GPIO_LockPin(M1_PWM_UH_GPIO_Port, M1_PWM_UH_Pin);
+    LL_GPIO_LockPin(M1_PWM_VH_GPIO_Port, M1_PWM_VH_Pin);
+    LL_GPIO_LockPin(M1_PWM_VL_GPIO_Port, M1_PWM_VL_Pin);
+    LL_GPIO_LockPin(M1_PWM_WH_GPIO_Port, M1_PWM_WH_Pin);
+    LL_GPIO_LockPin(M1_PWM_WL_GPIO_Port, M1_PWM_WL_Pin);
+    LL_GPIO_LockPin(M1_PWM_UL_GPIO_Port, M1_PWM_UL_Pin);
 }
 
 __weak void MCboot( MCI_Handle_t* pMC)
@@ -38,23 +38,11 @@ __weak void MCboot( MCI_Handle_t* pMC)
   }
   else
   {
-    bMCBootCompleted = (uint8_t )0;
+    bMCBootCompleted = 0;
     FOC_Init();
-
-    /******************************************************/
-    /*   PID component initialization: speed regulation   */
-    /******************************************************/
-    // PID_HandleInit(&PIDSpeedHandle_M1);
-
-    /****************************************************/
-    /*   Virtual speed sensor component initialization  */
-    /****************************************************/
-    // VSS_Init(&VirtualSpeedSensorM1);
-
-    /**********************************************************/
-    /*   Virtual bus voltage sensor component initialization  */
-    /**********************************************************/
-    // VVBS_Init(&BusVoltageSensor_M1);
+    PID_HandleInit(&PIDSpeedHandle_M1);
+    VSS_Init(&VirtualSpeedSensorM1);
+    VVBS_Init(&BusVoltageSensor_M1);
 
     bMCBootCompleted = 1U;
   }

@@ -10,6 +10,9 @@ extern "C" {
 /* ------------------------------------- INCLUDES -------------------------------------*/
 #include "main.h"
 #include "mc_type.h"
+#include "virtual_speed_sensor.h"
+#include "speed_torq_ctrl.h"
+#include "pwm_curr_fdbk.h"
 
 /* --------------------------------- PUBLIC VARIABLES ---------------------------------*/
 typedef enum
@@ -66,10 +69,10 @@ typedef enum
 
 typedef struct
 {
-    // SpeednTorqCtrl_Handle_t *pSTC;         /*!< Speed and torque controller object used by MCI.*/
+    SpeednTorqCtrl_Handle_t *pSTC;         /*!< Speed and torque controller object used by MCI.*/
     pFOCVars_t pFOCVars;                   /*!< Pointer to FOC vars used by MCI.*/
-    // PWMC_Handle_t *pPWM;                   /*!< Pointer to PWM handle structure.*/
-    // VirtualSpeedSensor_Handle_t *pVSS;
+    PWMC_Handle_t *pPWM;                   /*!< Pointer to PWM handle structure.*/
+    VirtualSpeedSensor_Handle_t *pVSS;
     MCI_UserCommands_t lastCommand;        /*!< Last command coming from the user.*/
     int16_t hFinalSpeed;                   /*!< Final speed of last ExecSpeedRamp command.*/
     int16_t hFinalTorque;                  /*!< Final torque of last ExecTorqueRamp command.*/
