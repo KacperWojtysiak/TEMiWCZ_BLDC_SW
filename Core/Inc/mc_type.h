@@ -26,15 +26,6 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-// #include "fixpmath.h"
-// #include "impedcorr.h"
-#include "hso.h"
-// #include "polpulse.h"
-// #include "pidreg_speed.h"
-// #include "pidregdqx_current.h"
-#ifndef PROFILER_DISABLE
-// #include "profiler_handle.h"
-#endif /* PROFILER_DISABLE */
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
@@ -93,8 +84,6 @@ typedef float           float_t;
 #define  MC_SPEED_FDBK   ((uint16_t)0x0020) /**< @brief Error: Speed feedback. */
 #define  MC_OVER_CURR    ((uint16_t)0x0040) /**< @brief Error: Emergency input (Over current). */
 #define  MC_SW_ERROR     ((uint16_t)0x0080) /**< @brief Software Error. */
-#define  MC_SAMPLEFAULT (uint16_t)(0x0100u)    /**< @brief Error: Fewer than two phase current samples available */
-#define  MC_OVERCURR_SW (uint16_t)(0x0200u)    /**< @brief Error: Software overcurrent tripped */
 #define  MC_DP_FAULT     ((uint16_t)0x0400) /**< @brief Error Driver protection fault. */
 
 /** @}*/
@@ -121,90 +110,6 @@ typedef float           float_t;
 typedef uint32_t MC_RetStatus_t;
 
 /**
-  * @brief Structure holding D & Q measures or references, in Per-Unit format
-  *
-  * This type can be used to store either current or voltages in Q2.30 fixed
-  * point format. This format allows for Per-Unit data storage.
-  */
-typedef Vector_dq_t dq_fixp30_t;
-
-/**
-  * @brief Groups currents and voltages ADC offset measurements
-  *
-  * The Polarization offsets measurement procedure is an operation that needs to be
-  * done at least once in the course of product life, prior to its first activation. It
-  * performs a set of measurements that allow for the Motor Control Application to
-  * work well.
-  *
-  * @see See MC_SetPolarizationOffsetsMotor1 for more details.
-  */
-typedef struct {
-     Currents_Irst_t CurrentOffsets; /**< ADC offset for phase current measurements */
-     Voltages_Urst_t VoltageOffsets; /**< ADC offset for phase voltage measurements */
-} PolarizationOffsets_t;
-
-/**
-  * @brief Structure holding D & Q measures or references, in Natural format
-  *
-  * This type can be used to store either current, voltages or frequencies in
-  * Q16.16 fixed point format. This format allows for storing values in natural
-  * units such as Ampere, Volt or Hertz for instance. It can be used as long as
-  * the data to be stored can fit within the ranges
-  */
-typedef struct
-{
-    fixp16_t D;
-    fixp16_t Q;
-} Vector_dq_fixp16_t, dq_fixp16_t;
-
-/**
- * @brief Structure holding D & Q measures or references, in floats
- *
- * This type can be used to store either current, voltages or frequencies in
- * float. This format allows for storing values in natural
- * units such as Ampere, Volt or Hertz for instance.
- */
-typedef struct
-{
-    float D;
-    float Q;
-} Vector_dq_float_t, dq_float_t;
-
-/**
-  * @brief Lists all possible polarization offsets measurement states
-  *
-  * The Polarization offsets measurements is an operation that needs to be done at
-  * least once in the course of product life, prior to its first activation. It
-  * performs a set of measurements that allow for the Motor Control Application to
-  * work well.
-  *
-  * @see See MC_SetPolarizationOffsetsMotor1 for more details.
-  *
-  * When the application is switched on, the Polarization State is set to #NOT_DONE.
-  */
-typedef enum {
-    NOT_DONE = 0,    /**< No polarization offset have been provided to or measured by
-                       * the Motor Control application since the application was started */
-    ONGOING = 1,     /**< The polarization offset measurement procedure is on-going. The Motor
-                       *  cannot be controlled yet. */
-    COMPLETED = 2    /**< The polarization offsets measurement procedure has completed or
-                       *  polarization offsets have been provided with MC_SetPolarizationOffsetsMotor1(). */
-} PolarizationState_t;
-
-typedef struct _FOC_ActiveCurrentLimits_Bits_
-{
-    uint16_t	FOC_ACL_Accel_Busvolt:1;
-    uint16_t	FOC_ACL_Regen_Busvolt:1;
-    uint16_t	FOC_ACL_Accel_Abs:1;
-    uint16_t	FOC_ACL_Regen_Abs:1;
-    uint16_t	FOC_ACL_Forwards:1;
-    uint16_t	FOC_ACL_Reverse:1;
-    uint16_t	FOC_ACL_Motor:1;
-    uint16_t	FOC_ACL_Powerstage:1;
-    uint16_t	unused:8;
-} FOC_ActiveCurrentLimits_Bits;
-
-/**
   * @brief union type definition for u32 to Float conversion and vice versa
   */
 //cstat -MISRAC2012-Rule-19.2
@@ -214,65 +119,6 @@ typedef union _FLOAT_U32_
   float   Float_Val;
 } FloatToU32;
 //cstat +MISRAC2012-Rule-19.2
-
-/* FOC ZEST Control structure
- *
- * This structure is used to control ZEST while running.
- * This is required because the ZEST library is controlled using function calls, and the internal data
- * structure is not available to the user.
- * The user can write to this structure via communication protocols or using the debugger, and the change
- * will be passed to ZEST using function calls.
- */
-typedef struct _FOC_ZESTControl_s_
-{
-    bool		enableInjection;		/* Allow ZEST to inject a current signal into the motor */
-    bool		enableCorrection;		/* Allow ZEST to correct the motor estimated angle */
-    bool		enableFlip;				/* Allow HSO/ZEST to correct inverted rotor lock */
-
-    bool 		enableRun;
-    bool		enableRunBackground;
-
-    bool		enableControlUpdate;
-
-    fixp30_t		injectFreq_kHz;			/* Injection frequency in kHz */
-    fixp30_t		injectId_A_pu;			/* Injection d-axis current in per unit A */
-    fixp30_t		injectIq_A_pu;			/* Injection q-axis current in per unit A */
-    fixp24_t		feedbackGainD;			/* D-axis feedback */
-    fixp24_t		feedbackGainQ;			/* Q-axis feedback */
-
-    fixp30_t		CurrentLimitToSwitchZestConfig_pu;	/* Threshold to switch to alternative ZeST configuration */
-    fixp30_t		injectFreq_Alt_kHz;									/* Injection frequency in kHz for alternative configuration */
-    fixp24_t		feedbackGainD_Alt;									/* D-axis feedback for alternative configuration */
-    fixp24_t		feedbackGainQ_Alt;									/* Q-axis feedback for alternative configuration */
-} FOC_ZESTControl_s;
-
-typedef struct _FOC_ZestFeedback_s_
-{
-	/* Members will be renamed later on (ToDo) */
-	fixp_t		signalD;
-	fixp_t		signalQ;
-	float_t		L;
-	float_t		R;
-	fixp30_t		thresholdFreq_pu;
-} FOC_ZestFeedback_s;
-
-typedef struct _throttleParams_t_
-{
-  float offset;
-  float gain;
-  float speedMaxRPM; //THROTTLE_SPEED_MAX_RPM
-  int8_t direction;
-  uint8_t padding [3];
-} throttleParams_t;
-
-/**
-  * @brief union type definition for u32 to Float conversion and vice versa
-  */
-typedef union _CONVERT_u_
-{
-    uint32_t	u32;
-    float_t		flt;
-} CONVERT_u;
 
 /**
   * @brief Two components q, d type definition
@@ -401,6 +247,17 @@ typedef struct
 } FF_TuningStruct_t;
 
 /**
+  * @brief structure type definition for phase offsets setting/getting. In case of single shunt
+  *        only phaseAOffset is relevant.
+  */
+typedef struct
+{
+  int32_t phaseAOffset;
+  int32_t phaseBOffset;
+  int32_t phaseCOffset;
+} PolarizationOffsets_t;
+
+/**
   * @brief  Current references source type, internal or external to FOCDriveClass.
   */
 typedef enum
@@ -409,109 +266,61 @@ typedef enum
 } CurrRefSource_t ;
 
 /**
-  * @brief  FOC variables structure
+  * @brief  FOC variables structure.
   */
 typedef struct
-{
-    uint16_t hCodeError;                        /**< @brief error message */
+{  //cstat !MISRAC2012-Dir-4.8
 
-      /* Objects */
-    fixp24_t		      	Flux_Rated_VpHz;	      /**< @brief Rated flux
-                                                  *
-                                                  * @note this field only exists if HSO is used.
-                                                  */
-    /* Configuration */
-    PolarizationState_t		PolarizationState;    /**< @brief polarization offsets measurements state
-                                                  *
-                                                  * @note this field only exists if HSO is used.
-                                                  */
-    MC_ControlMode_t		controlMode;            /**< @brief control mode currently used
-                                                  *
-                                                  * @note this field only exists if HSO is used.
-                                                  */
-    MC_ControlMode_t		controlMode_prev;       /**< @brief control mode in use in the previous cycle
-                                                  *
-                                                  * @note this field only exists if HSO is used.
-                                                  */
-    bool				flagStartWithCalibration;			  /**< @brief Initiates the start-up and the polarization
-                                                  *         offsets measurement procedure if needed.
-                                                  *
-                                                  * @note this field only exists if HSO is used.
-                                                  */
-    float_t       Kt;                           /**< @brief Torque to current conversion factor
-                                                  *
-                                                  * In Ampere/Nm
-                                                  *
-                                                  * @note this field only exists if HSO is used.
-                                                  */
-
-    /* Stator Resistance */
-    float_t				Rs_Ohm;                       /**< @brief Current phase motor resistance.
-                                                  *
-                                                  *  Used by RS DC estimation. In Ohm.
-                                                  *
-                                                  * @note this field only exists if HSO is used.
-                                                  */
-    fixp20_t      Rs_Rated_Ohm;                 /**< @brief Rated phase motor resistance
-                                                  *
-                                                  *  In Ohm.
-                                                  *
-                                                  * @note this field only exists if HSO is used.
-                                                  */
-    /* Stator inductance */
-    /* User communication values in fixp24_t, range < 128 H, resolution ~= 60 nano-Henry */
-    fixp24_t			Ls_Rated_H;                   /**< @brief Rated phase motor inductance
-                                                  *
-                                                  * In Henry. This value is in Q24 format. This allows
-                                                  * for a 0 to 128 H range with a ~60 nano-Henry resolution.
-                                                  *
-                                                  * @note this field only exists if HSO is used.
-                                                  */
-    fixp24_t			Ls_Active_H;                  /**< @brief Current phase motor inductance
-                                                  *
-                                                  * In Henry. This value is in Q24 format. This allows
-                                                  * for a 0 to 128 H range with a ~60 nano-Henry resolution.
-                                                  *
-                                                  * @note this field only exists if HSO is used.
-                                                  */
-
-    /* Zest estimated Ls */
-    fixp24_t			Ls_Est_H;				              /**< @brief Estimated phase motor inductance
-                                                  *
-                                                  * In Henry. This value is in Q24 format. This allows
-                                                  * for a 0 to 128 H range with a ~60 nano-Henry resolution.
-                                                  *
-                                                  * @note this field only exists if HSO is used.
-                                                  */
-
-    FIXP_scaled_t			Ls_Rated_pu_fps;		      /**< @brief Rated phase motor inductance, in "per unit"
-                                                  *
-                                                  * @note this field only exists if HSO is used.
-                                                  */
-    FIXP_scaled_t			Ls_Active_pu_fps;		      /**< @brief Current phase motor inductance, in "per unit"
-                                                  *
-                                                  * @note this field only exists if HSO is used.
-                                                  */
-    float         polePairs;                    /**< @brief Number of pole pairs of the motor
-                                                  *
-                                                  * @note this field only exists if HSO is used.
-                                                  */
-    bool        flag_enableOffsetMeasurement;   /**< @brief Enables or disables the measurement of polarization offsets
-                                                  *
-                                                  * @note this field only exists if HSO is used.
-                                                  */
-
+  ab_t Iab;                     /**< @brief Stator current on stator reference frame abc.
+                                  *
+                                  * @note This field does not exists if HSO is used.
+                                  */
+  alphabeta_t Ialphabeta;       /**< @brief Stator current on stator reference frame alfa-beta.
+                                  *
+                                  * @note This field does not exists if HSO is used.
+                                  */
+  qd_t IqdHF;                   /**< @brief Stator current on stator reference frame alfa-beta.
+                                  *
+                                  * @note This field does not exists if HSO is used.
+                                  */
+  qd_t Iqd;                     /**< @brief Stator current on rotor reference frame qd.
+                                  *
+                                  * @note This field does not exists if HSO is used.
+                                  */
+  qd_t Iqdref;                  /**< @brief Stator current on rotor reference frame qd.
+                                  *
+                                  * @note This field does not exists if HSO is used.
+                                  */
+  int16_t UserIdref;            /**< @brief User value for the Idref stator current.
+                                  *
+                                  * @note This field does not exists if HSO is used.
+                                  */
+  qd_t Vqd;                     /**< @brief Phase voltage on rotor reference frame qd.
+                                  *
+                                  * @note This field does not exists if HSO is used.
+                                  */
+  alphabeta_t Valphabeta;       /**< @brief Phase voltage on stator reference frame alpha-beta.
+                                  *
+                                  * @note This field does not exists if HSO is used.
+                                  */
+  int16_t hTeref;               /**< @brief Reference torque.
+                                  *
+                                  * @note This field does not exists if HSO is used.
+                                  */
+  int16_t hElAngle;             /**< @brief Electrical angle used for reference frame transformation.
+                                  *
+                                  * @note This field does not exists if HSO is used.
+                                  */
+  uint16_t hCodeError;          /**< @brief Error Code.
+                                  *
+                                  * @note This field does not exists if HSO is used.
+                                  */
+  CurrRefSource_t bDriveInput;  /**< @brief Specifies whether the current reference source must be
+                                  *         #INTERNAL or #EXTERNAL.
+                                  *
+                                  * @note This field does not exists if HSO is used.
+                                  */
 } FOCVars_t, *pFOCVars_t;
-
-/**
-  * @brief  StartUp mode definition
-  */
-
-typedef enum
-{
-  POL_PULSE_ONLY = 0x0U,    /**< @brief Start with PolPulses only */
-  RSDC_ONLY      = 0x1U     /**< @brief Start with RsDC only (with alignment) */
-} StartMode_t, *pStartMode_t;
 
 /**
   * @brief  6step variables structure.
@@ -606,7 +415,9 @@ typedef enum
 /** @name Utility macros definitions */
 /** @{ */
 #define RPM2MEC01HZ(rpm) (int16_t)((int32_t)(rpm)/6)
-// #define MAX(a,b) (((a)>(b))?(a):(b))
+#ifndef MAX
+#define MAX(a,b) (((a)>(b))?(a):(b))
+#endif
 /** @} */
 
 /**

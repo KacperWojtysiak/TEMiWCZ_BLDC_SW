@@ -118,7 +118,7 @@ int main(void)
   MX_COMP4_Init();
   MX_CORDIC_Init();
   /* USER CODE BEGIN 2 */
-  
+  MC_Init();
   DRV8323_calibrateCSA();
   DRV8323_setupSpi();
   

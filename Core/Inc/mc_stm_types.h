@@ -93,9 +93,9 @@
   #include "stm32g4xx_ll_usart.h"
   // #include "stm32g4xx_ll_dac.h"
   #include "stm32g4xx_ll_dma.h"
-  // #include "stm32g4xx_ll_comp.h"
+  #include "stm32g4xx_ll_comp.h"
   // #include "stm32g4xx_ll_opamp.h"
-  // #include "stm32g4xx_ll_cordic.h"
+  #include "stm32g4xx_ll_cordic.h"
 
 /* Make this define visible for all projects */
 #define NBR_OF_MOTORS             1
@@ -156,7 +156,7 @@ __STATIC_INLINE uint16_t LL_ADC_REG_ReadConversionData12L(const ADC_TypeDef *ADC
 #define DIRECT_CONNECT (uint32_t)(OPAMP_CSR_OPAMPINTEN)
 #define OPAMP_UNCHANGED (uint32_t)(0xFFFFFFFFUL)
 
-/* #define ADC_INJ_TRIG_TIMER LL_ADC_INJ_TRIG_EXT_TIM8_TRGO */
+/* #define ADC_INJ_TRIG_TIMER LL_ADC_INJ_TRIG_EXT_TIM1_TRGO */
 
 /**
  * @name Predefined Speed Units

@@ -49,6 +49,8 @@ extern "C" {
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
+#define SYS_TICK_FREQUENCY 2000
+#define SYSTICK_DIVIDER (SYS_TICK_FREQUENCY/1000)
 
 /* USER CODE END EC */
 
@@ -94,18 +96,18 @@ void ITM_SendValue (int port, uint32_t value);
 #define SENS_V_CN_GPIO_Port GPIOB
 #define TIM1_BRK_Pin GPIO_PIN_10
 #define TIM1_BRK_GPIO_Port GPIOB
-#define TIM1_CH3N_Pin GPIO_PIN_13
-#define TIM1_CH3N_GPIO_Port GPIOB
-#define TIM1_CH2N_Pin GPIO_PIN_14
-#define TIM1_CH2N_GPIO_Port GPIOB
-#define TIM1_CH1N_Pin GPIO_PIN_15
-#define TIM1_CH1N_GPIO_Port GPIOB
-#define TIM1_CH3_Pin GPIO_PIN_8
-#define TIM1_CH3_GPIO_Port GPIOA
-#define TIM1_CH2_Pin GPIO_PIN_9
-#define TIM1_CH2_GPIO_Port GPIOA
-#define TIM1_CH1_Pin GPIO_PIN_10
-#define TIM1_CH1_GPIO_Port GPIOA
+#define M1_PWM_WL_Pin GPIO_PIN_13
+#define M1_PWM_WL_GPIO_Port GPIOB
+#define M1_PWM_VL_Pin GPIO_PIN_14
+#define M1_PWM_VL_GPIO_Port GPIOB
+#define M1_PWM_UL_Pin GPIO_PIN_15
+#define M1_PWM_UL_GPIO_Port GPIOB
+#define M1_PWM_WH_Pin GPIO_PIN_8
+#define M1_PWM_WH_GPIO_Port GPIOA
+#define M1_PWM_VH_Pin GPIO_PIN_9
+#define M1_PWM_VH_GPIO_Port GPIOA
+#define M1_PWM_UH_Pin GPIO_PIN_10
+#define M1_PWM_UH_GPIO_Port GPIOA
 #define T_SWDIO_Pin GPIO_PIN_13
 #define T_SWDIO_GPIO_Port GPIOA
 #define T_SWCLK_Pin GPIO_PIN_14

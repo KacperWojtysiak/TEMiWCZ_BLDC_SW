@@ -22,8 +22,7 @@
 #include "stm32g4xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#define SYS_TICK_FREQUENCY 2000
-#define SYSTICK_DIVIDER (SYS_TICK_FREQUENCY/1000)
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
