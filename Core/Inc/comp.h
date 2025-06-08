@@ -1,9 +1,9 @@
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
-  * @file    dma.h
+  * @file    comp.h
   * @brief   This file contains all the function prototypes for
-  *          the dma.c file
+  *          the comp.c file
   ******************************************************************************
   * @attention
   *
@@ -18,8 +18,8 @@
   */
 /* USER CODE END Header */
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __DMA_H__
-#define __DMA_H__
+#ifndef __COMP_H__
+#define __COMP_H__
 
 #ifdef __cplusplus
 extern "C" {
@@ -28,17 +28,23 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
-/* DMA memory to memory transfer handles -------------------------------------*/
-
 /* USER CODE BEGIN Includes */
 
 /* USER CODE END Includes */
+
+extern COMP_HandleTypeDef hcomp1;
+
+extern COMP_HandleTypeDef hcomp2;
+
+extern COMP_HandleTypeDef hcomp4;
 
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
 
-void MX_DMA_Init(void);
+void MX_COMP1_Init(void);
+void MX_COMP2_Init(void);
+void MX_COMP4_Init(void);
 
 /* USER CODE BEGIN Prototypes */
 
@@ -48,5 +54,5 @@ void MX_DMA_Init(void);
 }
 #endif
 
-#endif /* __DMA_H__ */
+#endif /* __COMP_H__ */
 

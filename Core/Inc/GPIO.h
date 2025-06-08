@@ -1,23 +1,38 @@
+/* USER CODE BEGIN Header */
 /**
   ******************************************************************************
-  * @file           : GPIO.h
-  * @author         : 
-  * @brief          : Header for all GPIO related functionalities.
+  * @file    gpio.h
+  * @brief   This file contains all the function prototypes for
+  *          the gpio.c file
+  ******************************************************************************
+  * @attention
+  *
+  * Copyright (c) 2025 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
   ******************************************************************************
   */
-
+/* USER CODE END Header */
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __GPIO_H
-#define __GPIO_H
+#ifndef __GPIO_H__
+#define __GPIO_H__
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/* ------------------------------------- INCLUDES -------------------------------------*/
-#include "stm32g4xx_hal.h"
+/* Includes ------------------------------------------------------------------*/
+#include "main.h"
 
-/* --------------------------------- PUBLIC VARIABLES ---------------------------------*/
+/* USER CODE BEGIN Includes */
+
+/* USER CODE END Includes */
+
+/* USER CODE BEGIN Private defines */
 #define BTN_Pin_1             GPIO_PIN_9
 #define BTN_Pin_2             GPIO_PIN_12
 #define BTN_GPIO_Port         GPIOB
@@ -27,11 +42,17 @@ extern "C" {
 #define LED_GPIO_Port_C       GPIOC
 #define LED_GPIO_Port_A       GPIOA
 
-/* --------------------------------- PUBLIC FUNCTIONS ---------------------------------*/
-void GPIO_Init(void);
+
+/* USER CODE END Private defines */
+
+void MX_GPIO_Init(void);
+
+/* USER CODE BEGIN Prototypes */
+
+/* USER CODE END Prototypes */
 
 #ifdef __cplusplus
 }
 #endif
+#endif /*__ GPIO_H__ */
 
-#endif /* __GPIO_H */

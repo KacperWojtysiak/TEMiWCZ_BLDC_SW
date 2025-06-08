@@ -47,70 +47,8 @@ void Task(){
         Task100ms();
     }
     if (tick % 50 == 0 && mc.enabled) {
-        Starting();
     }
     tick ++;
-}
-
-void Starting(){
-    // SixStepTask();
-    // BADC_StepChangeEvent(&bemfHandle, FAKE_SPEED_DPP); // sztuczna prędkość
-    // BADC_CalcRevUpDemagTime(&bemfHandle); // czas rozmagnesowania
-
-    startupCounter++;
-    if (startupCounter >= 36) {
-        start = false;
-        // BADC_SetLoopClosed(&bemfHandle);
-        startupCounter = 0;
-    }
-}
-
-void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim)
-{
-    if (htim->Instance == TIM2 && htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1) {
-        SixStepTask();
-    }
-}
-
-void SixStepTask() {
-    if (!mc.enabled) return;
-
-    // pwmHandle.CntPh = mc.pwmDuty;
-    BADC_SetSamplingPoint(&bemfHandle, &pwmHandle, &busVoltageHandle);
-
-    switch (mc.step) {
-        case 0:
-            __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, mc.pwmDuty);  // U+
-            __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 0);         // V off
-            __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, 0);         // W off
-            break;
-        case 1:
-            __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, mc.pwmDuty);  // U+
-            __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, mc.pwmDuty);  // V-
-            __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, 0);         // W off
-            break;
-        case 2:
-            __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 0);         // U off
-            __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, mc.pwmDuty);  // V+
-            __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, 0);         // W off
-            break;
-        case 3:
-            __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 0);         // U off
-            __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, mc.pwmDuty);  // V+
-            __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, mc.pwmDuty);  // W-
-            break;
-        case 4:
-            __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 0);         // U off
-            __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 0);         // V off
-            __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, mc.pwmDuty);  // W+
-            break;
-        case 5:
-            __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, mc.pwmDuty);  // U-
-            __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 0);         // V off
-            __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, mc.pwmDuty);  // W+
-            break;
-    }
-    mc.step = (mc.step + 1) % 6;
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){

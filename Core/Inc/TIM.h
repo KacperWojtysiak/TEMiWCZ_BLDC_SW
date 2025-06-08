@@ -1,24 +1,44 @@
+/* USER CODE BEGIN Header */
 /**
   ******************************************************************************
-  * @file           : TIM.h
-  * @author         : 
-  * @brief          : Header for all TIM related functionalities.
+  * @file    tim.h
+  * @brief   This file contains all the function prototypes for
+  *          the tim.c file
+  ******************************************************************************
+  * @attention
+  *
+  * Copyright (c) 2025 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
   ******************************************************************************
   */
-
+/* USER CODE END Header */
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __TIM_H
-#define __TIM_H
+#ifndef __TIM_H__
+#define __TIM_H__
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/* ------------------------------------- INCLUDES -------------------------------------*/
-#include "stm32g4xx_hal.h"
+/* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
-/* --------------------------------- PUBLIC VARIABLES ---------------------------------*/
+/* USER CODE BEGIN Includes */
+
+/* USER CODE END Includes */
+
+extern TIM_HandleTypeDef htim1;
+
+extern TIM_HandleTypeDef htim2;
+
+extern TIM_HandleTypeDef htim3;
+
+/* USER CODE BEGIN Private defines */
 /* PWM generation and current reading */
 #define PWM_FREQUENCY                       2000
 #define PWM_FREQ_SCALING                    1
@@ -53,13 +73,21 @@ extern "C" {
 #define M1_AUX_TIM_PERIOD_CYCLES            (uint16_t)((((uint32_t)ADV_TIM_CLK_MHz * (uint32_t)1000000u\
                                             / ((uint32_t)(PWM_FREQUENCY)*OVS_COUNT)))-1)
 
-extern TIM_HandleTypeDef htim1;
+/* USER CODE END Private defines */
 
-/* --------------------------------- PUBLIC FUNCTIONS ---------------------------------*/
+void MX_TIM1_Init(void);
+void MX_TIM2_Init(void);
+void MX_TIM3_Init(void);
+
+void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
+
+/* USER CODE BEGIN Prototypes */
 void TIM_StartTIM1();
+/* USER CODE END Prototypes */
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* __TIM_H */
+#endif /* __TIM_H__ */
+
