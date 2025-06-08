@@ -1,9 +1,9 @@
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
-  * @file    adc.h
+  * @file    cordic.h
   * @brief   This file contains all the function prototypes for
-  *          the adc.c file
+  *          the cordic.c file
   ******************************************************************************
   * @attention
   *
@@ -18,8 +18,8 @@
   */
 /* USER CODE END Header */
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __ADC_H__
-#define __ADC_H__
+#ifndef __CORDIC_H__
+#define __CORDIC_H__
 
 #ifdef __cplusplus
 extern "C" {
@@ -32,38 +32,15 @@ extern "C" {
 
 /* USER CODE END Includes */
 
-extern ADC_HandleTypeDef hadc1;
-
-extern ADC_HandleTypeDef hadc2;
+extern CORDIC_HandleTypeDef hcordic;
 
 /* USER CODE BEGIN Private defines */
-#define SENS_I_A_Pin GPIO_PIN_1
-#define SENS_I_A_GPIO_Port GPIOC
-#define SENS_I_B_Pin GPIO_PIN_2
-#define SENS_I_B_GPIO_Port GPIOC
-#define SENS_I_C_Pin GPIO_PIN_3
-#define SENS_I_C_GPIO_Port GPIOC
-
-#define ADC_CURR_BUFFER_SIZE 3
-#define ADC_VOLT_BUFFER_SIZE 3
-
-extern ADC_HandleTypeDef hadc1;
-extern ADC_HandleTypeDef hadc2;
-extern uint16_t currentBuffer[ADC_CURR_BUFFER_SIZE];
-extern uint16_t voltageBuffer[ADC_VOLT_BUFFER_SIZE];
-
-
 
 /* USER CODE END Private defines */
 
-void MX_ADC1_Init(void);
-void MX_ADC2_Init(void);
+void MX_CORDIC_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-/* --------------------------------- PUBLIC FUNCTIONS ---------------------------------*/
-void ADC_StartDMA_ADC();
-
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* adc);
 
 /* USER CODE END Prototypes */
 
@@ -71,5 +48,5 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* adc);
 }
 #endif
 
-#endif /* __ADC_H__ */
+#endif /* __CORDIC_H__ */
 

@@ -38,7 +38,7 @@
 
   #define HAL_ADC_MODULE_ENABLED
 #define HAL_COMP_MODULE_ENABLED
-/*#define HAL_CORDIC_MODULE_ENABLED   */
+#define HAL_CORDIC_MODULE_ENABLED
 /*#define HAL_CRC_MODULE_ENABLED   */
 /*#define HAL_CRYP_MODULE_ENABLED   */
 /*#define HAL_DAC_MODULE_ENABLED   */
@@ -181,7 +181,7 @@ The real value may vary depending on the variations in voltage and temperature.*
   */
 
 #define  VDD_VALUE                   (3300UL) /*!< Value of VDD in mv */
-#define  TICK_INT_PRIORITY           (0UL)    /*!< tick interrupt priority (lowest by default)  */
+#define  TICK_INT_PRIORITY           (4UL)    /*!< tick interrupt priority (lowest by default)  */
 #define  USE_RTOS                     0U
 #define  PREFETCH_ENABLE              1U
 #define  INSTRUCTION_CACHE_ENABLE     1U

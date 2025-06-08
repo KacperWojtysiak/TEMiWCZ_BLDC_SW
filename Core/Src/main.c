@@ -20,6 +20,7 @@
 #include "main.h"
 #include "adc.h"
 #include "comp.h"
+#include "cordic.h"
 #include "dma.h"
 #include "spi.h"
 #include "tim.h"
@@ -109,14 +110,13 @@ int main(void)
   MX_ADC1_Init();
   MX_TIM1_Init();
   MX_SPI1_Init();
-  MX_TIM3_Init();
   MX_ADC2_Init();
   MX_USART1_UART_Init();
   MX_USB_Device_Init();
-  MX_TIM2_Init();
   MX_COMP1_Init();
   MX_COMP2_Init();
   MX_COMP4_Init();
+  MX_CORDIC_Init();
   /* USER CODE BEGIN 2 */
   
   DRV8323_calibrateCSA();

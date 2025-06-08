@@ -59,9 +59,9 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     ${CMAKE_SOURCE_DIR}/Core/Src/DMA.c
     ${CMAKE_SOURCE_DIR}/Core/Src/USB.c
     ${CMAKE_SOURCE_DIR}/Core/Src/TIM.c
-    ${CMAKE_SOURCE_DIR}/Core/Src/SPD.c
     ${CMAKE_SOURCE_DIR}/Core/Src/drv8323.c
     ${CMAKE_SOURCE_DIR}/Core/Src/Scheduler.c
+    ${CMAKE_SOURCE_DIR}/Core/Src/MC.c
 )
 
 # Link directories setup
