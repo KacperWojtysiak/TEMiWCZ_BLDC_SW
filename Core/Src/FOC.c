@@ -25,7 +25,8 @@
 OpenLoop_Handle_t *pOpenLoop[1] = {MC_NULL};
 
 /* --------------------------------- PRIVATE FUNCTIONS ---------------------------------*/
-uint16_t FOC_CurrControllerM1();
+static uint16_t FOC_CurrControllerM1();
+
 /* --------------------------------- PUBLIC FUNCTIONS ---------------------------------*/
 
 void FOC_Clear(uint8_t bMotor){
@@ -87,11 +88,16 @@ void FOC_Init(){
 
   //Setting the control mode
   // MCI_SetSpeedMode(&Mci[M1]);
-  FOCVars[M1].bDriveInput = INTERNAL;
-  STC_SetControlMode(Mci[M1].pSTC, MCM_SPEED_MODE); //TODO
-  Mci[M1].LastModalitySetByUser = MCM_SPEED_MODE; //MCM_OPEN_LOOP_VOLTAGE_MODE
+  Mci->pFOCVars->bDriveInput = INTERNAL;
+  STC_SetControlMode(Mci->pSTC, MCM_SPEED_MODE);
+  Mci->LastModalitySetByUser = MCM_SPEED_MODE;//TODO
 
   // MCI_ExecTorqueRamp(&Mci[M1], STC_GetDefaultIqdref(pSTC[M1]).q, 0);
+    Mci[M1].lastCommand = MCI_CMD_EXECTORQUERAMP;
+    Mci[M1].hFinalTorque = STC_GetDefaultIqdref(pSTC[M1]).q;
+    Mci[M1].hDurationms = 0;
+    Mci[M1].CommandState = MCI_COMMAND_NOT_ALREADY_EXECUTED;
+    Mci[M1].LastModalitySetByUser = MCM_TORQUE_MODE;
 }
 
 void FOC_HighFrequencyTask(){

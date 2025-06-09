@@ -15,6 +15,8 @@
 
 /* --------------------------------- PRIVATE VARIABLES ---------------------------------*/
 
+volatile uint8_t bMCBootCompleted = 0;
+
 /* --------------------------------- PRIVATE FUNCTIONS ---------------------------------*/
 void mc_lock_pins (void)
 {

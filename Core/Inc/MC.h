@@ -15,7 +15,7 @@ extern "C" {
 #include "pwm_curr_fdbk.h"
 
 /* --------------------------------- PUBLIC VARIABLES ---------------------------------*/
-static volatile uint8_t bMCBootCompleted = 0;
+extern volatile uint8_t bMCBootCompleted;
 
 typedef enum
 {
