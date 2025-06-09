@@ -45,7 +45,7 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-static void MX_NVIC_Init(void);
+
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -110,12 +110,11 @@ int main(void)
   MX_SPI1_Init();
   MX_ADC2_Init();
   MX_USART1_UART_Init();
-  // MX_USB_Device_Init(); // TODO comment to perform motor control
+  MX_USB_Device_Init();
   MX_CORDIC_Init();
   MX_COMP1_Init();
   /* USER CODE BEGIN 2 */
   MC_Init();
-  MX_NVIC_Init();
   DRV8323_calibrateCSA();
   DRV8323_setupSpi();
   
@@ -196,24 +195,7 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-static void MX_NVIC_Init(void)
-{
-  /* USART1_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(USART1_IRQn, 3, 1);
-  HAL_NVIC_EnableIRQ(USART1_IRQn);
-  /* DMA1_Channel1_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 3, 0);
-  HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
-  /* TIM1_BRK_TIM15_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(TIM1_BRK_TIM15_IRQn, 4, 1);
-  HAL_NVIC_EnableIRQ(TIM1_BRK_TIM15_IRQn);
-  /* TIM1_UP_TIM16_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(TIM1_UP_TIM16_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(TIM1_UP_TIM16_IRQn);
-  /* ADC1_2_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(ADC1_2_IRQn, 2, 0);
-  HAL_NVIC_EnableIRQ(ADC1_2_IRQn);
-}
+
 /* USER CODE END 4 */
 
 /**

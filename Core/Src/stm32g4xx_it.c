@@ -197,7 +197,7 @@ void SysTick_Handler(void)
   if (SystickDividerCounter == SYSTICK_DIVIDER)
   {
   /* USER CODE END SysTick_IRQn 0 */
-    HAL_IncTick();
+  HAL_IncTick();
   /* USER CODE BEGIN SysTick_IRQn 1 */
     HAL_SYSTICK_IRQHandler();
     SystickDividerCounter = 0;
