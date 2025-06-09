@@ -59,13 +59,7 @@
 
 /* External variables --------------------------------------------------------*/
 extern PCD_HandleTypeDef hpcd_USB_FS;
-extern DMA_HandleTypeDef hdma_adc1;
-extern DMA_HandleTypeDef hdma_adc2;
-extern ADC_HandleTypeDef hadc1;
 extern ADC_HandleTypeDef hadc2;
-extern COMP_HandleTypeDef hcomp1;
-extern COMP_HandleTypeDef hcomp2;
-extern COMP_HandleTypeDef hcomp4;
 extern SPI_HandleTypeDef hspi1;
 extern TIM_HandleTypeDef htim1;
 extern UART_HandleTypeDef huart1;
@@ -84,6 +78,7 @@ void NMI_Handler(void)
   /* USER CODE BEGIN NonMaskableInt_IRQn 0 */
 
   /* USER CODE END NonMaskableInt_IRQn 0 */
+  HAL_RCC_NMI_IRQHandler();
   /* USER CODE BEGIN NonMaskableInt_IRQn 1 */
    while (1)
   {
@@ -222,32 +217,6 @@ void SysTick_Handler(void)
 /******************************************************************************/
 
 /**
-  * @brief This function handles DMA1 channel1 global interrupt.
-  */
-void DMA1_Channel1_IRQHandler(void)
-{
-  /* USER CODE BEGIN DMA1_Channel1_IRQn 0 */
-
-  /* USER CODE END DMA1_Channel1_IRQn 0 */
-  HAL_DMA_IRQHandler(&hdma_adc1);
-  /* USER CODE BEGIN DMA1_Channel1_IRQn 1 */
-  /* USER CODE END DMA1_Channel1_IRQn 1 */
-}
-
-/**
-  * @brief This function handles DMA1 channel2 global interrupt.
-  */
-void DMA1_Channel2_IRQHandler(void)
-{
-  /* USER CODE BEGIN DMA1_Channel2_IRQn 0 */
-
-  /* USER CODE END DMA1_Channel2_IRQn 0 */
-  HAL_DMA_IRQHandler(&hdma_adc2);
-  /* USER CODE BEGIN DMA1_Channel2_IRQn 1 */
-  /* USER CODE END DMA1_Channel2_IRQn 1 */
-}
-
-/**
   * @brief This function handles ADC1 and ADC2 global interrupt.
   */
 void ADC1_2_IRQHandler(void)
@@ -255,7 +224,6 @@ void ADC1_2_IRQHandler(void)
   /* USER CODE BEGIN ADC1_2_IRQn 0 */
 
   /* USER CODE END ADC1_2_IRQn 0 */
-  HAL_ADC_IRQHandler(&hadc1);
   HAL_ADC_IRQHandler(&hadc2);
   /* USER CODE BEGIN ADC1_2_IRQn 1 */
   FOC_HighFrequencyTask();
@@ -376,35 +344,6 @@ void USART1_IRQHandler(void)
   /* USER CODE BEGIN USART1_IRQn 1 */
   HAL_UART_Transmit_IT(&huart1, data, SIZE);
   /* USER CODE END USART1_IRQn 1 */
-}
-
-/**
-  * @brief This function handles COMP1, COMP2 and COMP3 interrupts through EXTI lines 21, 22 and 29.
-  */
-void COMP1_2_3_IRQHandler(void)
-{
-  /* USER CODE BEGIN COMP1_2_3_IRQn 0 */
-
-  /* USER CODE END COMP1_2_3_IRQn 0 */
-  HAL_COMP_IRQHandler(&hcomp1);
-  HAL_COMP_IRQHandler(&hcomp2);
-  /* USER CODE BEGIN COMP1_2_3_IRQn 1 */
-
-  /* USER CODE END COMP1_2_3_IRQn 1 */
-}
-
-/**
-  * @brief This function handles COMP4 interrupt through EXTI line 30.
-  */
-void COMP4_IRQHandler(void)
-{
-  /* USER CODE BEGIN COMP4_IRQn 0 */
-
-  /* USER CODE END COMP4_IRQn 0 */
-  HAL_COMP_IRQHandler(&hcomp4);
-  /* USER CODE BEGIN COMP4_IRQn 1 */
-
-  /* USER CODE END COMP4_IRQn 1 */
 }
 
 /* USER CODE BEGIN 1 */

@@ -21,7 +21,6 @@
 #include "adc.h"
 #include "comp.h"
 #include "cordic.h"
-#include "dma.h"
 #include "spi.h"
 #include "tim.h"
 #include "usart.h"
@@ -107,24 +106,20 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_DMA_Init();
-  MX_ADC1_Init();
   MX_TIM1_Init();
   MX_SPI1_Init();
   MX_ADC2_Init();
   MX_USART1_UART_Init();
   MX_USB_Device_Init();
-  MX_COMP1_Init();
-  MX_COMP2_Init();
-  MX_COMP4_Init();
   MX_CORDIC_Init();
+  MX_COMP1_Init();
   /* USER CODE BEGIN 2 */
   MC_Init();
   DRV8323_calibrateCSA();
   DRV8323_setupSpi();
   
-  ADC_StartDMA_ADC();
-  TIM_StartTIM1();
+  // ADC_StartDMA_ADC();
+  // TIM_StartTIM1();
 
   // MCI_SetOpenLoopVoltageMode(&Mci[M1]);
   int16_t voltage = 50;
@@ -172,8 +167,8 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
   RCC_OscInitStruct.PLL.PLLM = RCC_PLLM_DIV6;
   RCC_OscInitStruct.PLL.PLLN = 85;
-  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-  RCC_OscInitStruct.PLL.PLLQ = RCC_PLLQ_DIV4;
+  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV8;
+  RCC_OscInitStruct.PLL.PLLQ = RCC_PLLQ_DIV2;
   RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV2;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
@@ -193,6 +188,10 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+
+  /** Enables the Clock Security System
+  */
+  HAL_RCC_EnableCSS();
 }
 
 /* USER CODE BEGIN 4 */
