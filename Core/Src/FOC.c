@@ -16,14 +16,13 @@
 #include "speed_torq_ctrl.h"
 #include "revup_ctrl.h"
 #include "pid_regulator.h"
-#include "open_loop.h"
 #include "ramp_ext_mngr.h"
 #include "pwm_curr_fdbk.h"
 #include "mc_math.h"
 #include "circle_limitation.h"
 
 /* --------------------------------- PRIVATE VARIABLES ---------------------------------*/
-OpenLoop_Handle_t *pOpenLoop[1] = {MC_NULL};   
+OpenLoop_Handle_t *pOpenLoop[1] = {MC_NULL};
 
 /* --------------------------------- PRIVATE FUNCTIONS ---------------------------------*/
 uint16_t FOC_CurrControllerM1();
@@ -170,4 +169,37 @@ inline uint16_t FOC_CurrControllerM1()
   FOCVars[M1].hElAngle = hElAngle;
 
   return (hCodeError);
+}
+
+void FOC_CalcCurrRef(uint8_t bMotor)
+{
+  qd_t IqdTmp;
+
+  /* Enter critical section */
+  /* Disable interrupts to avoid any interruption during Iqd reference latching */
+  /* to avoid MF task writing them while HF task reading them */
+  __disable_irq();
+  IqdTmp = FOCVars[bMotor].Iqdref;
+
+  /* Exit critical section */
+  __enable_irq();
+
+  MC_ControlMode_t mode;
+
+  mode = Mci[bMotor].LastModalitySetByUser;
+  if (INTERNAL == FOCVars[bMotor].bDriveInput
+               && (mode != MCM_OPEN_LOOP_VOLTAGE_MODE && mode != MCM_OPEN_LOOP_CURRENT_MODE))
+  {
+    FOCVars[bMotor].hTeref = STC_CalcTorqueReference(pSTC[bMotor]);
+    IqdTmp.q = FOCVars[bMotor].hTeref;
+
+  }
+
+  /* Enter critical section */
+  /* Disable interrupts to avoid any interruption during Iqd reference restoring */
+  __disable_irq();
+  FOCVars[bMotor].Iqdref = IqdTmp;
+
+  /* Exit critical section */
+  __enable_irq();
 }

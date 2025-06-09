@@ -26,6 +26,7 @@ void Task1ms();
 void Task10ms();
 void Task100ms();
 void SixStepTask();
+void MC_RunMotorControlTasks(void);
 
 #ifdef __cplusplus
 }

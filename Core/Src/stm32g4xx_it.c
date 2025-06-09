@@ -97,7 +97,8 @@ void NMI_Handler(void)
 void HardFault_Handler(void)
 {
   /* USER CODE BEGIN HardFault_IRQn 0 */
-
+  FOC_Clear(M1);
+  MCI_FaultProcessing(&Mci[M1], MC_SW_ERROR, 0);
   /* USER CODE END HardFault_IRQn 0 */
   while (1)
   {
@@ -209,6 +210,7 @@ void SysTick_Handler(void)
   SystickDividerCounter ++;
 
   Task();
+  MC_RunMotorControlTasks();
   /* USER CODE END SysTick_IRQn 1 */
 }
 
@@ -315,7 +317,7 @@ void TIM1_BRK_TIM15_IRQHandler(void)
   PWMC_OVP_Handler(&PWM_Handle_M1._Super, TIM1);
 
   /* Systick is not executed due low priority so is necessary to call MC_Scheduler here */
-  // MC_RunMotorControlTasks();
+  MC_RunMotorControlTasks();
   /* USER CODE END TIM1_BRK_TIM15_IRQn 1 */
 }
 

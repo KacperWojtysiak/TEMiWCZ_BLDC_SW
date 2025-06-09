@@ -52,9 +52,10 @@ set(MotorControl_Src
     ${CMAKE_SOURCE_DIR}/MCSDK/MCLib/Any/Src/virtual_speed_sensor.c
     ${CMAKE_SOURCE_DIR}/MCSDK/MCLib/Any/Src/virtual_bus_voltage_sensor.c
     ${CMAKE_SOURCE_DIR}/MCSDK/MCLib/Any/Src/circle_limitation.c
+    ${CMAKE_SOURCE_DIR}/MCSDK/MCLib/Any/Src/pqd_motor_power_measurement.c
+    ${CMAKE_SOURCE_DIR}/MCSDK/MCLib/Any/Src/speed_pos_fdbk.c
 
     ${CMAKE_SOURCE_DIR}/MCSDK/MCLib/G4xx/Src/r3_1_g4xx_pwm_curr_fdbk.c
-
 )
 
 # Link directories setup

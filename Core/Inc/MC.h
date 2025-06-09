@@ -15,6 +15,8 @@ extern "C" {
 #include "pwm_curr_fdbk.h"
 
 /* --------------------------------- PUBLIC VARIABLES ---------------------------------*/
+static volatile uint8_t bMCBootCompleted = 0;
+
 typedef enum
 {
   ICLWAIT = 12,
@@ -91,6 +93,13 @@ typedef struct
 /* --------------------------------- PUBLIC FUNCTIONS ---------------------------------*/
 void MC_Init(void);
 void MCI_FaultProcessing(MCI_Handle_t *pHandle, uint16_t hSetErrors, uint16_t hResetErrors);
+
+int16_t MCI_GetImposedMotorDirection(MCI_Handle_t *pHandle);
+void MCI_ExecBufferedCommands(MCI_Handle_t *pHandle);
+bool MCI_StartMotor();
+bool MCI_StopMotor();
+void MCI_ExecSpeedRamp(int16_t hFinalSpeed, uint16_t hDurationms);
+uint32_t MCI_GetFaultState(MCI_Handle_t *pHandle);
 
 #ifdef __cplusplus
 }

@@ -14,14 +14,17 @@ extern "C" {
 
 /* ------------------------------------- INCLUDES -------------------------------------*/
 #include "main.h"
+#include "open_loop.h"
 
 /* --------------------------------- PUBLIC VARIABLES ---------------------------------*/
+extern OpenLoop_Handle_t *pOpenLoop[1];
 
 /* --------------------------------- PUBLIC FUNCTIONS ---------------------------------*/
 void FOC_Init();
 void FOC_Clear(uint8_t bMotor);
 
 void FOC_HighFrequencyTask();
+void FOC_CalcCurrRef(uint8_t bMotor);
 
 #ifdef __cplusplus
 }

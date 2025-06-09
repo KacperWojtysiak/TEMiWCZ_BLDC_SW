@@ -22,7 +22,7 @@
 #include "gpio.h"
 
 /* USER CODE BEGIN 0 */
-
+#include "mc_config.h"
 /* USER CODE END 0 */
 
 /*----------------------------------------------------------------------------*/
@@ -89,5 +89,18 @@ void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 2 */
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
+    HAL_GPIO_TogglePin(LED_GPIO_Port_A, LED_Pin_1);
+    HAL_GPIO_TogglePin(LED_GPIO_Port_C, LED_Pin_2);
+    HAL_GPIO_TogglePin(LED_GPIO_Port_C, LED_Pin_3);
 
+    if (GPIO_Pin == BTN_1_Pin)
+    {
+        if (Mci[M1].State == STOP || Mci[M1].State == IDLE ){
+            MCI_StartMotor();
+        }else{
+            MCI_StopMotor();
+        }
+    }
+}
 /* USER CODE END 2 */
