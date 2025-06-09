@@ -110,7 +110,7 @@ int main(void)
   MX_SPI1_Init();
   MX_ADC2_Init();
   MX_USART1_UART_Init();
-  MX_USB_Device_Init();
+  // MX_USB_Device_Init(); // TODO comment to perform motor control
   MX_CORDIC_Init();
   MX_COMP1_Init();
   /* USER CODE BEGIN 2 */
@@ -122,11 +122,8 @@ int main(void)
   // ADC_StartDMA_ADC();
   // TIM_StartTIM1();
 
-  // MCI_SetOpenLoopVoltageMode(&Mci[M1]);
-  Mci->pFOCVars->bDriveInput = EXTERNAL;
-  STC_SetControlMode(Mci->pSTC, MCM_OPEN_LOOP_VOLTAGE_MODE);
-  Mci->LastModalitySetByUser = MCM_OPEN_LOOP_VOLTAGE_MODE;
-  int16_t voltage = 100;
+  MCI_SetOpenLoopVoltageMode(&Mci[M1]);
+  int16_t voltage = 50;
   OL_UpdateVoltage(&OpenLoop_ParamsM1, ((voltage * 32767) / 100));
   int32_t rpm = 500; // przykładowa wartość prędkości obrotowej w RPM
   MCI_ExecSpeedRamp((int16_t)((rpm * SPEED_UNIT) / U_RPM), 1000);

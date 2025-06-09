@@ -26,6 +26,14 @@
 #include "mc_parameters.h"
 #include "mc_config_common.h"
 
+/* USER CODE BEGIN Additional include */
+
+/* USER CODE END Additional include */
+
+/* USER CODE BEGIN Additional define */
+
+/* USER CODE END Additional define */
+
 /**
   * @brief  SpeedNPosition sensor parameters Motor 1 - Base Class.
   */

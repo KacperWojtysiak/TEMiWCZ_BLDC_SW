@@ -16,6 +16,7 @@
 /* --------------------------------- PRIVATE VARIABLES ---------------------------------*/
 
 volatile uint8_t bMCBootCompleted = 0;
+MCI_Handle_t* pMCI[NBR_OF_MOTORS];
 
 /* --------------------------------- PRIVATE FUNCTIONS ---------------------------------*/
 void mc_lock_pins (void)
@@ -31,15 +32,16 @@ void mc_lock_pins (void)
     LL_GPIO_LockPin(M1_PWM_UL_GPIO_Port, M1_PWM_UL_Pin);
 }
 
-void MCboot( MCI_Handle_t* pMC)
+void MCboot( MCI_Handle_t* pMCIList[NBR_OF_MOTORS] )
 {
-  if (NULL == pMC)
+  if (NULL == pMCIList)
   {
     return;
   }
   else
   {
     bMCBootCompleted = 0;
+    pMCIList[M1] = &Mci[M1];
     FOC_Init();
     PID_HandleInit(&PIDSpeedHandle_M1);
     VSS_Init(&VirtualSpeedSensorM1);
@@ -56,7 +58,7 @@ void MC_Init(void){
   HAL_NVIC_SetPriority(SysTick_IRQn, uwTickPrio, 0U);
 
 /* Initialize the Motor Control Subsystem */
-  MCboot(&Mci[M1]);
+  MCboot(pMCI);
   mc_lock_pins();
 }
 
@@ -253,4 +255,58 @@ uint32_t MCI_GetFaultState(MCI_Handle_t *pHandle){
     LocalFaultState = (uint32_t)(pHandle->PastFaults);
     LocalFaultState |= (uint32_t)(pHandle->CurrentFaults) << 16;
     return (LocalFaultState);
+}
+
+void MCI_SetOpenLoopVoltageMode(MCI_Handle_t *pHandle)
+{
+  pHandle->pFOCVars->bDriveInput = EXTERNAL;
+  STC_SetControlMode(pHandle->pSTC, MCM_OPEN_LOOP_VOLTAGE_MODE);
+  pHandle->LastModalitySetByUser = MCM_OPEN_LOOP_VOLTAGE_MODE;
+}
+
+void MCI_SetSpeedMode(MCI_Handle_t *pHandle)
+{
+#ifdef NULL_PTR_CHECK_MC_INT
+  if (MC_NULL == pHandle)
+  {
+    /* Nothing to do */
+  }
+  else
+  {
+#endif
+    pHandle->pFOCVars->bDriveInput = INTERNAL;
+    STC_SetControlMode(pHandle->pSTC, MCM_SPEED_MODE);
+    pHandle->LastModalitySetByUser = MCM_SPEED_MODE;
+#ifdef NULL_PTR_CHECK_MC_INT
+  }
+#endif
+}
+
+void MCI_ExecTorqueRamp(MCI_Handle_t *pHandle, int16_t hFinalTorque, uint16_t hDurationms)
+{
+#ifdef NULL_PTR_CHECK_MC_INT
+  if (MC_NULL == pHandle)
+  {
+    /* Nothing to do */
+  }
+  else
+  {
+#endif
+    pHandle->lastCommand = MCI_CMD_EXECTORQUERAMP;
+    pHandle->hFinalTorque = hFinalTorque;
+    pHandle->hDurationms = hDurationms;
+    pHandle->CommandState = MCI_COMMAND_NOT_ALREADY_EXECUTED;
+    pHandle->LastModalitySetByUser = MCM_TORQUE_MODE;
+#ifdef NULL_PTR_CHECK_MC_INT
+  }
+#endif
+}
+
+MC_ControlMode_t MCI_GetControlMode(MCI_Handle_t *pHandle) //cstat !MISRAC2012-Rule-8.13
+{
+#ifdef NULL_PTR_CHECK_MC_INT
+  return ((MC_NULL == pHandle) ? MCM_TORQUE_MODE : pHandle->LastModalitySetByUser);
+#else
+  return (pHandle->LastModalitySetByUser);
+#endif
 }

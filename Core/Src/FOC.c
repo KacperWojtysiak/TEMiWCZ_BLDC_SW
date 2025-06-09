@@ -85,19 +85,9 @@ void FOC_Init(){
   FOCVars[M1].bDriveInput = EXTERNAL;
   FOCVars[M1].Iqdref = STC_GetDefaultIqdref(pSTC[M1]);
   FOCVars[M1].UserIdref = STC_GetDefaultIqdref(pSTC[M1]).d;
+  MCI_SetSpeedMode(&Mci[M1]);
 
-  //Setting the control mode
-  // MCI_SetSpeedMode(&Mci[M1]);
-  Mci->pFOCVars->bDriveInput = INTERNAL;
-  STC_SetControlMode(Mci->pSTC, MCM_SPEED_MODE);
-  Mci->LastModalitySetByUser = MCM_SPEED_MODE;//TODO
-
-  // MCI_ExecTorqueRamp(&Mci[M1], STC_GetDefaultIqdref(pSTC[M1]).q, 0);
-    Mci[M1].lastCommand = MCI_CMD_EXECTORQUERAMP;
-    Mci[M1].hFinalTorque = STC_GetDefaultIqdref(pSTC[M1]).q;
-    Mci[M1].hDurationms = 0;
-    Mci[M1].CommandState = MCI_COMMAND_NOT_ALREADY_EXECUTED;
-    Mci[M1].LastModalitySetByUser = MCM_TORQUE_MODE;
+  MCI_ExecTorqueRamp(&Mci[M1], STC_GetDefaultIqdref(pSTC[M1]).q, 0);
 }
 
 void FOC_HighFrequencyTask(){
@@ -115,7 +105,7 @@ void FOC_HighFrequencyTask(){
   hFOCreturn = FOC_CurrControllerM1();
   if(hFOCreturn == MC_DURATION)
   {
-    MCI_FaultProcessing(&Mci[M1], MC_DURATION, 0);
+    MCI_FaultProcessing(&Mci[M1], MC_DURATION, 0); //TODO
   }
   else
   {
@@ -137,7 +127,7 @@ void FOC_HighFrequencyTask(){
   }
 }
 
-inline uint16_t FOC_CurrControllerM1()
+inline uint16_t FOC_CurrControllerM1(void)
 {
   qd_t Iqd, Vqd;
   ab_t Iab;
@@ -147,7 +137,7 @@ inline uint16_t FOC_CurrControllerM1()
   SpeednPosFdbk_Handle_t *speedHandle;
   MC_ControlMode_t mode;
 
-  mode = Mci[M1].LastModalitySetByUser;
+  mode = MCI_GetControlMode( &Mci[M1] );
   speedHandle = STC_GetSpeedSensor(pSTC[M1]);
   hElAngle = SPD_GetElAngle(speedHandle);
   hElAngle += SPD_GetInstElSpeedDpp(speedHandle)*PARK_ANGLE_COMPENSATION_FACTOR;
@@ -161,6 +151,10 @@ inline uint16_t FOC_CurrControllerM1()
   if (mode == MCM_OPEN_LOOP_VOLTAGE_MODE)
   {
     Vqd = OL_VqdConditioning(pOpenLoop[M1]);
+  }
+  else
+  {
+    /* Nothing to do */
   }
   Vqd = Circle_Limitation(&CircleLimitationM1, Vqd);
   hElAngle += SPD_GetInstElSpeedDpp(speedHandle)*REV_PARK_ANGLE_COMPENSATION_FACTOR;

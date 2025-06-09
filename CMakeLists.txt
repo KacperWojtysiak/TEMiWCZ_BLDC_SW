@@ -46,7 +46,6 @@ set(MotorControl_Src
     ${CMAKE_SOURCE_DIR}/MCSDK/MCLib/Any/Src/sto_pll_speed_pos_fdbk.c
     ${CMAKE_SOURCE_DIR}/MCSDK/MCLib/Any/Src/speed_torq_ctrl.c
     ${CMAKE_SOURCE_DIR}/MCSDK/MCLib/Any/Src/revup_ctrl.c
-    ${CMAKE_SOURCE_DIR}/MCSDK/MCLib/Any/Src/pid_regulator.c
     ${CMAKE_SOURCE_DIR}/MCSDK/MCLib/Any/Src/open_loop.c
     ${CMAKE_SOURCE_DIR}/MCSDK/MCLib/Any/Src/ramp_ext_mngr.c
     ${CMAKE_SOURCE_DIR}/MCSDK/MCLib/Any/Src/virtual_speed_sensor.c

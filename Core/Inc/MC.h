@@ -89,6 +89,7 @@ typedef struct
     MC_ControlMode_t LastModalitySetByUser; /*!< The last MC_ControlMode_t set by the user. */
 } MCI_Handle_t;
 
+extern MCI_Handle_t* pMCI[NBR_OF_MOTORS];
 
 /* --------------------------------- PUBLIC FUNCTIONS ---------------------------------*/
 void MC_Init(void);
@@ -100,6 +101,10 @@ bool MCI_StartMotor();
 bool MCI_StopMotor();
 void MCI_ExecSpeedRamp(int16_t hFinalSpeed, uint16_t hDurationms);
 uint32_t MCI_GetFaultState(MCI_Handle_t *pHandle);
+void MCI_SetOpenLoopVoltageMode(MCI_Handle_t *pHandle);
+void MCI_SetSpeedMode(MCI_Handle_t *pHandle);
+void MCI_ExecTorqueRamp(MCI_Handle_t *pHandle, int16_t hFinalTorque, uint16_t hDurationms);
+MC_ControlMode_t MCI_GetControlMode(MCI_Handle_t *pHandle);
 
 #ifdef __cplusplus
 }
